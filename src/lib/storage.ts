@@ -1,0 +1,108 @@
+import { put, del } from '@vercel/blob';
+import { kv } from '@vercel/kv';
+import { nanoid } from 'nanoid';
+import slugify from 'slugify';
+import { MarkdownFile } from '@/types';
+
+const FILES_KEY = 'markdown-files';
+
+export async function getAllFiles(): Promise<MarkdownFile[]> {
+  const files = await kv.hgetall<Record<string, MarkdownFile>>(FILES_KEY);
+  
+  if (!files) {
+    return [];
+  }
+
+  return Object.values(files)
+    .filter(file => file.isActive)
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+}
+
+export async function getFileBySlug(slug: string): Promise<MarkdownFile | null> {
+  const file = await kv.hget<MarkdownFile>(FILES_KEY, slug);
+  
+  if (!file || !file.isActive) {
+    return null;
+  }
+
+  return file;
+}
+
+export async function uploadFile(file: File, customSlug?: string): Promise<MarkdownFile> {
+  const filename = file.name;
+  const baseSlug = customSlug || filename.replace(/\.md$/i, '');
+  const slug = slugify(baseSlug, { lower: true, strict: true });
+  
+  // Check if file with same slug already exists
+  const existingFile = await kv.hget<MarkdownFile>(FILES_KEY, slug);
+  
+  // If file exists, delete old blob first
+  if (existingFile && existingFile.blobUrl) {
+    try {
+      await del(existingFile.blobUrl);
+    } catch (error) {
+      console.error('Failed to delete old blob:', error);
+    }
+  }
+
+  // Upload to Vercel Blob
+  const blob = await put(`markdown/${slug}.md`, file, {
+    access: 'public',
+    addRandomSuffix: false,
+  });
+
+  const now = new Date().toISOString();
+  const markdownFile: MarkdownFile = {
+    // Keep original ID if updating, otherwise create new
+    id: existingFile?.id || nanoid(),
+    slug,
+    filename,
+    blobUrl: blob.url,
+    // Keep original creation date if updating
+    createdAt: existingFile?.createdAt || now,
+    updatedAt: now,
+    isActive: true,
+  };
+
+  // Save metadata to KV
+  await kv.hset(FILES_KEY, { [slug]: markdownFile });
+
+  return markdownFile;
+}
+
+export async function deleteFile(slug: string): Promise<boolean> {
+  const file = await kv.hget<MarkdownFile>(FILES_KEY, slug);
+  
+  if (!file) {
+    return false;
+  }
+
+  // Soft delete - mark as inactive
+  const updatedFile: MarkdownFile = {
+    ...file,
+    isActive: false,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await kv.hset(FILES_KEY, { [slug]: updatedFile });
+
+  // Optionally delete from Blob storage
+  try {
+    await del(file.blobUrl);
+  } catch (error) {
+    console.error('Failed to delete blob:', error);
+  }
+
+  return true;
+}
+
+export async function getFileContent(blobUrl: string): Promise<string> {
+  const response = await fetch(blobUrl);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch file content');
+  }
+
+  return response.text();
+}
+
