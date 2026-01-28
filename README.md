@@ -60,8 +60,8 @@ V tomto súbore nájdeš:
 ### Krok 1: Klonovanie repozitára
 
 ```bash
-git clone https://github.com/paulus-tom/md-share.git
-cd markdown-sharing
+git clone https://github.com/aibilitycz/markdown-share.git
+cd markdown-share
 ```
 
 ### Krok 2: Inštalácia závislostí
@@ -118,6 +118,15 @@ ADMIN_KEY=...
 
 # Voliteľné: Base URL pre aplikáciu
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# Vercel Blob storage
+BLOB_READ_WRITE_TOKEN=...
+
+# Vercel KV Database
+KV_URL=...
+KV_REST_API_URL=...
+KV_REST_API_TOKEN=...
+KV_REST_API_READ_ONLY_TOKEN=...
 ```
 
 Ak tieto premenné nemáš nastavené vo Vercel projekte, nastav ich najprv tam (viď [Deploy na Vercel](#-deploy-na-vercel)).
@@ -143,8 +152,8 @@ Aplikácia bude dostupná na `http://localhost:3000`
 ### Krok 1: Fork alebo klonovanie repozitára
 
 ```bash
-git clone https://github.com/paulus-tom/md-share.git
-cd markdown-sharing
+git clone https://github.com/aibilitycz/markdown-share.git
+cd markdown-share
 ```
 
 ### Krok 2: Vytvorenie Vercel projektu
@@ -422,7 +431,7 @@ Na stránke súboru môžeš:
 ## 📁 Štruktúra projektu
 
 ```
-markdown-sharing/
+markdown-share/
 ├── scripts/
 │   └── share.sh              # Upload script pre terminál
 ├── src/
