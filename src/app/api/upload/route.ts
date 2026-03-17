@@ -16,16 +16,17 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File | null;
     const customSlug = formData.get('slug') as string | null;
 
-    if (!file) {
+    if (!file || typeof file === 'string' || !file.name) {
       return NextResponse.json(
-        { success: false, error: 'No file provided' },
+        { success: false, error: 'No valid file provided' },
         { status: 400 }
       );
     }
 
-    if (!file.name.endsWith('.md')) {
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith('.md') && !fileName.endsWith('.html') && !fileName.endsWith('.htm')) {
       return NextResponse.json(
-        { success: false, error: 'Only .md files are allowed' },
+        { success: false, error: 'Only .md and .html files are allowed' },
         { status: 400 }
       );
     }
@@ -33,7 +34,8 @@ export async function POST(request: NextRequest) {
     const markdownFile = await uploadFile(file, customSlug || undefined);
     
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || request.nextUrl.origin;
-    const publicUrl = `${baseUrl}/${markdownFile.slug}`;
+    const isHtml = markdownFile.type === 'html';
+    const publicUrl = `${baseUrl}/${markdownFile.slug}${isHtml ? '/html' : ''}`;
 
     return NextResponse.json({
       success: true,

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { cs } from 'date-fns/locale';
+import Link from 'next/link';
 import { MarkdownFile } from '@/types';
 
 interface FileListProps {
@@ -43,8 +44,10 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
     }
   };
 
-  const copyLink = async (slug: string) => {
-    const url = `${window.location.origin}/${slug}`;
+  const copyLink = async (slug: string, type?: string) => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
+    const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    const url = `${cleanBaseUrl}/${slug}${type === 'html' ? '/html' : ''}`;
     await navigator.clipboard.writeText(url);
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2000);
@@ -76,17 +79,26 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
           {files.map((file) => (
             <tr key={file.id} className="hover:bg-gray-50 transition-colors">
               <td className="py-4 px-4">
-                <a
-                  href={`/${file.slug}`}
+                <Link
+                  href={`/${file.slug}${file.type === 'html' ? '/html' : ''}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-gray-900 hover:text-orange-600 transition-colors"
+                  className="font-medium text-gray-900 hover:text-orange-600 transition-colors flex items-center gap-2"
                 >
                   {file.filename}
-                </a>
+                  {file.type === 'html' ? (
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600 border border-blue-100">
+                      HTML
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                      MD
+                    </span>
+                  )}
+                </Link>
               </td>
               <td className="py-4 px-4">
-                <code className="text-sm text-gray-500 font-mono">/{file.slug}</code>
+                <code className="text-sm text-gray-500 font-mono">/{file.slug}{file.type === 'html' ? '/html' : ''}</code>
               </td>
               <td className="py-4 px-4">
                 <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-50 text-green-600">
@@ -101,7 +113,7 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
               <td className="py-4 px-4">
                 <div className="flex items-center justify-end gap-1">
                   <button
-                    onClick={() => copyLink(file.slug)}
+                    onClick={() => copyLink(file.slug, file.type)}
                     className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
                     title="Kopírovat odkaz"
                   >
@@ -115,8 +127,8 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
                       </svg>
                     )}
                   </button>
-                  <a
-                    href={`/${file.slug}`}
+                  <Link
+                    href={`/${file.slug}${file.type === 'html' ? '/html' : ''}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
@@ -125,7 +137,7 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
-                  </a>
+                  </Link>
                   <button
                     onClick={() => handleDelete(file.slug)}
                     disabled={deleting === file.slug}

@@ -6,6 +6,7 @@ export interface MarkdownFile {
   createdAt: string;
   updatedAt: string;
   isActive: boolean;
+  type?: 'md' | 'html';
 }
 
 export interface FileMetadata {

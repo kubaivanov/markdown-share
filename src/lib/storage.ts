@@ -30,8 +30,17 @@ export async function getFileBySlug(slug: string): Promise<MarkdownFile | null> 
 
 export async function uploadFile(file: File, customSlug?: string): Promise<MarkdownFile> {
   const filename = file.name;
-  const baseSlug = customSlug || filename.replace(/\.md$/i, '');
-  const slug = slugify(baseSlug, { lower: true, strict: true });
+  const isHtml = filename.toLowerCase().endsWith('.html') || filename.toLowerCase().endsWith('.htm');
+  const type = isHtml ? 'html' : 'md';
+  const extension = isHtml ? 'html' : 'md';
+  
+  const baseSlug = customSlug || filename.replace(/\.(md|html|htm)$/i, '');
+  let slug = slugify(baseSlug, { lower: true, strict: true });
+  
+  // Fallback to random ID if slugify returns an empty string (e.g., for filenames with only special chars)
+  if (!slug) {
+    slug = nanoid(10);
+  }
   
   // Check if file with same slug already exists
   const existingFile = await kv.hget<MarkdownFile>(FILES_KEY, slug);
@@ -46,7 +55,7 @@ export async function uploadFile(file: File, customSlug?: string): Promise<Markd
   }
 
   // Upload to Vercel Blob
-  const blob = await put(`markdown/${slug}.md`, file, {
+  const blob = await put(`markdown/${slug}.${extension}`, file, {
     access: 'public',
     addRandomSuffix: false,
   });
@@ -62,6 +71,7 @@ export async function uploadFile(file: File, customSlug?: string): Promise<Markd
     createdAt: existingFile?.createdAt || now,
     updatedAt: now,
     isActive: true,
+    type,
   };
 
   // Save metadata to KV
@@ -97,7 +107,7 @@ export async function deleteFile(slug: string): Promise<boolean> {
 }
 
 export async function getFileContent(blobUrl: string): Promise<string> {
-  const response = await fetch(blobUrl);
+  const response = await fetch(blobUrl, { cache: 'no-store' });
   
   if (!response.ok) {
     throw new Error('Failed to fetch file content');

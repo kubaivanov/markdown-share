@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # MD Share - Upload Script
-# Použitie: ./share.sh <subor.md> [vlastny-slug]
+# Použitie: ./share.sh <subor.md|subor.html> [vlastny-slug]
 
 # Konfigurácia - uprav tieto hodnoty!
 API_URL="${MD_SHARE_URL:-https://your-app.vercel.app}/api/upload"
@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 
 # Kontrola argumentov
 if [ -z "$1" ]; then
-    echo -e "${RED}❌ Použitie: ./share.sh <subor.md> [vlastny-slug]${NC}"
+    echo -e "${RED}❌ Použitie: ./share.sh <subor.md|subor.html> [vlastny-slug]${NC}"
     exit 1
 fi
 
@@ -30,8 +30,8 @@ if [ ! -f "$FILE" ]; then
 fi
 
 # Kontrola prípony
-if [[ ! "$FILE" == *.md ]]; then
-    echo -e "${YELLOW}⚠️  Súbor nemá príponu .md, pokračujem...${NC}"
+if [[ ! "$FILE" == *.md && ! "$FILE" == *.html && ! "$FILE" == *.htm ]]; then
+    echo -e "${YELLOW}⚠️  Súbor nemá príponu .md ani .html, pokračujem...${NC}"
 fi
 
 FILENAME=$(basename "$FILE")

@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getFileBySlug, getFileContent } from '@/lib/storage';
@@ -36,6 +36,10 @@ export default async function MarkdownPage({ params }: PageProps) {
 
   if (!file) {
     notFound();
+  }
+
+  if (file.type === 'html') {
+    redirect(`/${slug}/html`);
   }
 
   const content = await getFileContent(file.blobUrl);
