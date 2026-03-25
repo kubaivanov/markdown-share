@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Manrope, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({
-  variable: "--font-geist",
+const manrope = Manrope({
+  variable: "--font-headline",
+  subsets: ["latin", "latin-ext"],
+});
+
+const inter = Inter({
+  variable: "--font-body",
   subsets: ["latin", "latin-ext"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -39,9 +44,13 @@ export default function RootLayout({
       <head>
         <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
         <meta name="googlebot" content="noindex, nofollow" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body
-        className={`${geist.variable} ${geistMono.variable} font-sans antialiased bg-[#f5f5f5] text-gray-900`}
+        className={`${manrope.variable} ${inter.variable} ${geistMono.variable} font-body antialiased bg-background text-on-surface min-h-screen`}
       >
         {children}
       </body>

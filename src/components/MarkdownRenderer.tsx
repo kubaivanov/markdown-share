@@ -13,52 +13,52 @@ interface MarkdownRendererProps {
 
 const themeClasses: Record<ThemeName, string> = {
   orange: `
-    prose-a:text-orange-600
-    prose-code:text-orange-600
-    prose-blockquote:border-orange-400 prose-blockquote:bg-orange-50
+    prose-a:text-[#ea580c] hover:prose-a:text-[#c2410c]
+    prose-code:text-[#ea580c]
+    prose-blockquote:border-[#f97316]/40 prose-blockquote:bg-[#f97316]/5
   `,
   blue: `
-    prose-a:text-blue-600
-    prose-code:text-blue-600
-    prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50
+    prose-a:text-[#2563eb] hover:prose-a:text-[#1d4ed8]
+    prose-code:text-[#2563eb]
+    prose-blockquote:border-[#3b82f6]/40 prose-blockquote:bg-[#3b82f6]/5
   `,
   green: `
-    prose-a:text-emerald-600
-    prose-code:text-emerald-600
-    prose-blockquote:border-emerald-400 prose-blockquote:bg-emerald-50
+    prose-a:text-[#059669] hover:prose-a:text-[#047857]
+    prose-code:text-[#059669]
+    prose-blockquote:border-[#10b981]/40 prose-blockquote:bg-[#10b981]/5
   `,
   purple: `
-    prose-a:text-violet-600
-    prose-code:text-violet-600
-    prose-blockquote:border-violet-400 prose-blockquote:bg-violet-50
+    prose-a:text-[#7c3aed] hover:prose-a:text-[#6d28d9]
+    prose-code:text-[#7c3aed]
+    prose-blockquote:border-[#8b5cf6]/40 prose-blockquote:bg-[#8b5cf6]/5
   `,
   gray: `
-    prose-a:text-gray-600
-    prose-code:text-gray-600
-    prose-blockquote:border-gray-400 prose-blockquote:bg-gray-50
+    prose-a:text-secondary hover:prose-a:text-on-surface
+    prose-code:text-secondary
+    prose-blockquote:border-outline/30 prose-blockquote:bg-surface-container-low
   `,
 };
 
 export default function MarkdownRenderer({ content, theme = 'orange' }: MarkdownRendererProps) {
   return (
     <article className={`prose prose-gray max-w-none
-      prose-headings:text-gray-900 prose-headings:font-bold
-      prose-h1:text-3xl prose-h1:mb-6 prose-h1:pb-4 prose-h1:border-b prose-h1:border-gray-200
-      prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
-      prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
-      prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
-      prose-a:no-underline hover:prose-a:underline
-      prose-strong:text-gray-900 prose-strong:font-semibold
-      prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
-      prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-pre:rounded-lg prose-pre:p-0 prose-pre:overflow-x-auto
-      prose-blockquote:border-l-4 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r prose-blockquote:text-gray-700 prose-blockquote:not-italic
-      prose-ul:text-gray-700 prose-ol:text-gray-700
-      prose-li:marker:text-gray-400 prose-li:my-1
+      prose-headings:text-on-surface prose-headings:font-headline prose-headings:font-extrabold
+      prose-h1:text-3xl prose-h1:mb-6 prose-h1:pb-4 prose-h1:border-b prose-h1:border-outline-variant/15
+      prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+      prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+      prose-p:text-on-surface/80 prose-p:leading-relaxed prose-p:mb-5 prose-p:font-body
+      prose-a:no-underline prose-a:font-medium
+      prose-strong:text-on-surface prose-strong:font-semibold
+      prose-code:bg-surface-container-highest/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-lg prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
+      prose-pre:bg-surface-container-low prose-pre:rounded-xl prose-pre:p-0 prose-pre:overflow-x-auto
+      prose-blockquote:border-l-[3px] prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r-xl prose-blockquote:text-on-surface/70 prose-blockquote:not-italic prose-blockquote:font-body
+      prose-ul:text-on-surface/80 prose-ol:text-on-surface/80
+      prose-li:marker:text-outline/50 prose-li:my-1.5
       prose-table:border-collapse prose-table:w-full
-      prose-th:bg-gray-50 prose-th:border prose-th:border-gray-200 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-gray-900
-      prose-td:border prose-td:border-gray-200 prose-td:px-4 prose-td:py-2
-      prose-hr:border-gray-200 prose-hr:my-8
-      prose-img:rounded-lg prose-img:shadow-sm prose-img:border prose-img:border-gray-200
+      prose-th:bg-surface-container-low prose-th:px-5 prose-th:py-3 prose-th:text-left prose-th:font-bold prose-th:text-on-surface prose-th:font-headline prose-th:text-sm
+      prose-td:px-5 prose-td:py-3 prose-td:border-t prose-td:border-outline-variant/15
+      prose-hr:border-outline-variant/15 prose-hr:my-10
+      prose-img:rounded-xl prose-img:shadow-sm
       ${themeClasses[theme]}
     `}>
       <ReactMarkdown

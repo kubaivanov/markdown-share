@@ -5,12 +5,12 @@ import Link from 'next/link';
 import FileList from '@/components/FileList';
 import { MarkdownFile, ThemeName } from '@/types';
 
-const themes: { value: ThemeName; label: string; color: string }[] = [
-  { value: 'orange', label: 'Oranžová', color: 'bg-orange-500' },
-  { value: 'blue', label: 'Modrá', color: 'bg-blue-500' },
-  { value: 'green', label: 'Zelená', color: 'bg-emerald-500' },
-  { value: 'purple', label: 'Fialová', color: 'bg-violet-500' },
-  { value: 'gray', label: 'Šedá', color: 'bg-gray-500' },
+const themes: { value: ThemeName; label: string; bg: string }[] = [
+  { value: 'orange', label: 'Oranžová', bg: 'bg-[#f97316]' },
+  { value: 'blue', label: 'Modrá', bg: 'bg-[#3b82f6]' },
+  { value: 'green', label: 'Zelená', bg: 'bg-[#10b981]' },
+  { value: 'purple', label: 'Fialová', bg: 'bg-[#8b5cf6]' },
+  { value: 'gray', label: 'Šedá', bg: 'bg-[#6b7280]' },
 ];
 
 export default function AdminPage() {
@@ -21,7 +21,6 @@ export default function AdminPage() {
   const [error, setError] = useState('');
   const [theme, setTheme] = useState<ThemeName>('orange');
 
-  // Check for saved admin key
   useEffect(() => {
     const savedKey = localStorage.getItem('md-share-admin-key');
     if (savedKey) {
@@ -35,12 +34,9 @@ export default function AdminPage() {
     setError('');
 
     try {
-      // First, validate the admin key
       const authResponse = await fetch('/api/auth', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adminKey: key }),
       });
 
@@ -53,11 +49,8 @@ export default function AdminPage() {
         return;
       }
 
-      // Then fetch files
       const filesResponse = await fetch('/api/files', {
-        headers: {
-          'X-Admin-Key': key,
-        },
+        headers: { 'X-Admin-Key': key },
       });
 
       if (filesResponse.ok) {
@@ -66,7 +59,6 @@ export default function AdminPage() {
         setIsAuthenticated(true);
         localStorage.setItem('md-share-admin-key', key);
 
-        // Fetch settings
         const settingsResponse = await fetch('/api/settings');
         if (settingsResponse.ok) {
           const settingsData = await settingsResponse.json();
@@ -113,40 +105,49 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#f5f5f5] grid-pattern flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <Link href="/admin" className="text-3xl font-bold text-gray-900 inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <span className="text-2xl">📝</span>
-              MD Share
-            </Link>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 asymmetric-bg selection:bg-tertiary-fixed selection:text-on-tertiary-fixed-variant">
+        {/* Brand Header */}
+        <header className="fixed top-0 w-full p-12 flex justify-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-xl">
+              <span className="material-symbols-outlined text-on-primary text-2xl">lock</span>
+            </div>
+            <h1 className="font-headline text-2xl font-extrabold tracking-tighter text-on-surface">MD Share</h1>
+          </div>
+        </header>
+
+        {/* Login Canvas */}
+        <main className="w-full max-w-[480px] z-10">
+          <div className="text-center mb-10">
+            <h2 className="font-headline text-4xl font-extrabold tracking-tight mb-3 text-on-surface">Vítejte zpět</h2>
+            <p className="text-on-surface-variant font-medium">Přístup ke kurátorskému digitálnímu prostoru</p>
           </div>
 
-          {/* Login Card */}
-          <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
-            <div className="flex border-b border-gray-200 mb-6">
-              <button className="flex-1 py-3 text-center text-gray-900 font-medium border-b-2 border-orange-500">
-                Přihlášení
-              </button>
-            </div>
+          {/* Glass Card */}
+          <div className="glass-panel rounded-3xl p-10 ambient-shadow relative overflow-hidden">
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-secondary-fixed/30 rounded-full blur-3xl" />
 
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <form onSubmit={handleLogin} className="relative z-10 flex flex-col gap-8">
+              <div className="space-y-3">
+                <label className="block font-headline text-sm font-bold tracking-wide uppercase text-on-surface-variant ml-1">
                   Admin Klíč
                 </label>
-                <input
-                  type="password"
-                  value={adminKey}
-                  onChange={(e) => setAdminKey(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-100 transition-all"
-                />
+                <div className="relative group">
+                  <input
+                    type="password"
+                    value={adminKey}
+                    onChange={(e) => setAdminKey(e.target.value)}
+                    placeholder="•••• •••• •••• ••••"
+                    className="w-full bg-surface-container-highest/50 border-none rounded-xl px-6 py-5 font-mono text-lg tracking-widest placeholder:text-outline focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-300"
+                  />
+                  <div className="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-50 group-focus-within:opacity-100 transition-opacity">
+                    <span className="material-symbols-outlined">key</span>
+                  </div>
+                </div>
               </div>
 
               {error && (
-                <div className="px-4 py-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm">
+                <div className="px-4 py-3 bg-error-container rounded-xl text-error text-sm font-medium">
                   {error}
                 </div>
               )}
@@ -154,38 +155,71 @@ export default function AdminPage() {
               <button
                 type="submit"
                 disabled={loading || !adminKey}
-                className="w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 disabled:text-gray-400 rounded-lg text-white font-medium transition-colors"
+                className="w-full bg-primary text-on-primary font-headline font-bold py-5 rounded-xl flex items-center justify-center gap-3 group hover:bg-primary-container disabled:opacity-40 disabled:hover:bg-primary transition-all duration-300 transform active:scale-[0.98]"
               >
-                {loading ? 'Načítám...' : 'Přihlásit se'}
+                <span>{loading ? 'Načítám...' : 'Přihlásit se'}</span>
+                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
               </button>
             </form>
           </div>
-        </div>
+
+          {/* Security badges */}
+          <div className="mt-12 flex items-center justify-center gap-8">
+            <div className="flex items-center gap-2 opacity-40">
+              <span className="material-symbols-outlined text-xl">security</span>
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em]">End-to-End Encrypted</span>
+            </div>
+            <div className="flex items-center gap-2 opacity-40">
+              <span className="material-symbols-outlined text-xl">verified_user</span>
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em]">ISO 27001</span>
+            </div>
+          </div>
+        </main>
+
+        {/* Status Bar */}
+        <footer className="fixed bottom-0 w-full p-8 flex justify-center">
+          <div className="flex items-center gap-3 bg-surface-container-low px-5 py-2.5 rounded-full">
+            <div className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-tertiary-container opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-on-tertiary-container" />
+            </div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-on-tertiary-container">
+              Systém aktivní
+            </p>
+          </div>
+        </footer>
+
+        {/* Background Decorations */}
+        <div className="fixed top-1/4 -left-20 w-[500px] h-[500px] rounded-full bg-secondary-fixed opacity-[0.03] blur-[100px] -z-10" />
+        <div className="fixed bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-tertiary-fixed opacity-[0.05] blur-[120px] -z-10" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
-      {/* Header */}
-      <header className="border-b border-gray-200 bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/admin" className="text-xl font-bold text-gray-900 flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <span>📝</span>
-            MD Share
+    <div className="min-h-screen bg-background">
+      {/* Header - no borders, tonal separation */}
+      <header className="bg-surface-container-lowest">
+        <div className="max-w-6xl mx-auto px-10 py-5 flex items-center justify-between">
+          <Link href="/admin" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 bg-primary flex items-center justify-center rounded-lg">
+              <span className="material-symbols-outlined text-on-primary text-lg">description</span>
+            </div>
+            <span className="font-headline text-xl font-extrabold tracking-tight text-on-surface">MD Share</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Téma:</span>
-              <div className="flex gap-1">
+
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold uppercase tracking-[0.15em] text-on-surface-variant">Téma</span>
+              <div className="flex gap-1.5">
                 {themes.map((t) => (
                   <button
                     key={t.value}
                     onClick={() => handleThemeChange(t.value)}
-                    className={`w-6 h-6 rounded-full ${t.color} transition-all ${
+                    className={`w-5 h-5 rounded-full ${t.bg} transition-all duration-200 ${
                       theme === t.value
-                        ? 'ring-2 ring-offset-2 ring-gray-400 scale-110'
-                        : 'hover:scale-110 opacity-60 hover:opacity-100'
+                        ? 'ring-2 ring-offset-2 ring-on-surface-variant scale-110'
+                        : 'hover:scale-125 opacity-50 hover:opacity-100'
                     }`}
                     title={t.label}
                   />
@@ -194,35 +228,44 @@ export default function AdminPage() {
             </div>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 text-gray-500 hover:text-gray-700 text-sm transition-colors"
+              className="text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2"
             >
+              <span className="material-symbols-outlined text-lg">logout</span>
               Odhlásit se
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Page Title */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 italic">Přehled souborů</h2>
-          <p className="text-gray-500 mt-1">Podívejte se na své sdílené soubory</p>
+      <main className="max-w-6xl mx-auto px-10 py-12">
+        {/* Page Title - asymmetric, editorial */}
+        <div className="mb-12">
+          <h2 className="font-headline text-[2rem] font-extrabold tracking-tight text-on-surface">
+            Přehled souborů
+          </h2>
+          <p className="text-on-surface-variant mt-2 font-medium">Vaše sdílené dokumenty na jednom místě</p>
         </div>
 
-        {/* Stats Bar */}
-        <div className="flex items-center gap-6 mb-6 text-sm">
-          <div className="flex items-center gap-2">
-            <span className="text-gray-500">Celkem souborů:</span>
-            <span className="font-semibold text-gray-900">{files.length}</span>
+        {/* Stats - using tonal containers instead of inline text */}
+        <div className="flex items-center gap-8 mb-10">
+          <div className="flex items-center gap-3 bg-surface-container-low px-5 py-3 rounded-2xl">
+            <span className="material-symbols-outlined text-on-surface-variant text-xl">folder</span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Souborů</p>
+              <p className="text-lg font-headline font-extrabold text-on-surface">{files.length}</p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-500">Příkaz pro nahrání:</span>
-            <code className="bg-gray-100 px-2 py-1 rounded text-orange-600 font-mono text-xs">./share.sh soubor.md</code>
+          <div className="flex items-center gap-3 bg-surface-container-low px-5 py-3 rounded-2xl">
+            <span className="material-symbols-outlined text-on-surface-variant text-xl">terminal</span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Příkaz</p>
+              <code className="text-sm font-mono text-on-surface-variant">./share.sh soubor.md</code>
+            </div>
           </div>
         </div>
 
-        {/* File Table */}
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        {/* File Table - on tonal surface, no borders */}
+        <div className="bg-surface-container-low rounded-2xl overflow-hidden">
           <FileList files={files} adminKey={adminKey} />
         </div>
       </main>

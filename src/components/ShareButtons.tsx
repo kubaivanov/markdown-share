@@ -38,53 +38,48 @@ export default function ShareButtons({ content, filename, slug }: ShareButtonsPr
   const openInChatGPT = () => {
     const truncated = truncateContent(content);
     const prompt = `Here is a markdown document:\n\n${truncated}`;
-    const url = `https://chat.openai.com/?q=${encodeURIComponent(prompt)}`;
-    window.open(url, '_blank');
+    window.open(`https://chat.openai.com/?q=${encodeURIComponent(prompt)}`, '_blank');
   };
 
   const openInClaude = () => {
     const truncated = truncateContent(content);
-    const url = `https://claude.ai/new?q=${encodeURIComponent(truncated)}`;
-    window.open(url, '_blank');
+    window.open(`https://claude.ai/new?q=${encodeURIComponent(truncated)}`, '_blank');
   };
 
   const openInGemini = () => {
     const truncated = truncateContent(content);
-    const url = `https://gemini.google.com/app?q=${encodeURIComponent(truncated)}`;
-    window.open(url, '_blank');
+    window.open(`https://gemini.google.com/app?q=${encodeURIComponent(truncated)}`, '_blank');
   };
 
   return (
     <div className="flex flex-wrap gap-2">
-      {/* Download Button */}
+      {/* Download */}
       <button
         onClick={handleDownload}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm font-medium transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest hover:bg-surface-container-low rounded-xl text-on-surface text-sm font-semibold transition-all duration-200"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
+        <span className="material-symbols-outlined text-lg text-on-surface-variant">download</span>
         Stáhnout
       </button>
 
-      {/* Copy Link Button */}
+      {/* Copy Link */}
       <button
         onClick={handleCopyLink}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm font-medium transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest hover:bg-surface-container-low rounded-xl text-on-surface text-sm font-semibold transition-all duration-200"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-        </svg>
+        <span className="material-symbols-outlined text-lg text-on-surface-variant">
+          {copied ? 'check' : 'link'}
+        </span>
         {copied ? 'Zkopírováno!' : 'Kopírovat odkaz'}
       </button>
 
-      {/* Divider */}
-      <div className="hidden sm:block w-px bg-gray-200 mx-1"></div>
+      {/* Spacer */}
+      <div className="w-px bg-outline-variant/20 mx-1 self-stretch" />
 
-      {/* AI Buttons */}
+      {/* AI Buttons - primary gradient */}
       <button
         onClick={openInChatGPT}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white text-sm font-medium transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-container rounded-xl text-on-primary text-sm font-semibold transition-all duration-300"
       >
         <span className="text-sm">🤖</span>
         ChatGPT
@@ -92,7 +87,7 @@ export default function ShareButtons({ content, filename, slug }: ShareButtonsPr
 
       <button
         onClick={openInClaude}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white text-sm font-medium transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-container rounded-xl text-on-primary text-sm font-semibold transition-all duration-300"
       >
         <span className="text-sm">🧠</span>
         Claude
@@ -100,7 +95,7 @@ export default function ShareButtons({ content, filename, slug }: ShareButtonsPr
 
       <button
         onClick={openInGemini}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white text-sm font-medium transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-container rounded-xl text-on-primary text-sm font-semibold transition-all duration-300"
       >
         <span className="text-sm">✨</span>
         Gemini

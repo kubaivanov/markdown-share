@@ -20,9 +20,7 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
     try {
       const response = await fetch(`/api/files/${slug}`, {
         method: 'PATCH',
-        headers: {
-          'X-Admin-Key': adminKey,
-        },
+        headers: { 'X-Admin-Key': adminKey },
       });
 
       if (response.ok) {
@@ -37,18 +35,13 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
   };
 
   const handleDelete = async (slug: string) => {
-    if (!confirm('Opravdu chcete zrušit sdílení tohoto souboru?')) {
-      return;
-    }
+    if (!confirm('Opravdu chcete zrušit sdílení tohoto souboru?')) return;
 
     setDeleting(slug);
-
     try {
       const response = await fetch(`/api/files/${slug}`, {
         method: 'DELETE',
-        headers: {
-          'X-Admin-Key': adminKey,
-        },
+        headers: { 'X-Admin-Key': adminKey },
       });
 
       if (response.ok) {
@@ -75,10 +68,12 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
 
   if (files.length === 0) {
     return (
-      <div className="text-center py-16">
-        <div className="text-5xl mb-4 opacity-50">📭</div>
-        <h3 className="text-lg font-medium text-gray-700 mb-2">Žádné sdílené soubory</h3>
-        <p className="text-gray-500 text-sm">Použijte <code className="bg-gray-100 px-2 py-1 rounded text-orange-600 font-mono text-xs">./share.sh</code> skript pro nahrání prvního souboru.</p>
+      <div className="text-center py-20">
+        <span className="material-symbols-outlined text-5xl text-on-surface-variant opacity-30 mb-4 block">folder_off</span>
+        <h3 className="font-headline text-lg font-bold text-on-surface mb-2">Žádné sdílené soubory</h3>
+        <p className="text-on-surface-variant text-sm">
+          Použijte <code className="bg-surface-container-highest px-2 py-0.5 rounded-lg font-mono text-xs">./share.sh</code> pro nahrání
+        </p>
       </div>
     );
   }
@@ -87,107 +82,97 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-gray-200">
-            <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">Soubor</th>
-            <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-            <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">Stav</th>
-            <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">Datum</th>
-            <th className="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">Akce</th>
+          <tr>
+            <th className="text-left py-4 px-6 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Soubor</th>
+            <th className="text-left py-4 px-6 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">URL</th>
+            <th className="text-left py-4 px-6 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Stav</th>
+            <th className="text-left py-4 px-6 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Datum</th>
+            <th className="text-right py-4 px-6 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Akce</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody>
           {files.map((file) => (
-            <tr key={file.id} className="hover:bg-gray-50 transition-colors">
-              <td className="py-4 px-4">
+            <tr key={file.id} className="hover:bg-surface-container transition-colors duration-200 group">
+              <td className="py-5 px-6">
                 <Link
                   href={`/${file.slug}${file.type === 'html' ? '/html' : ''}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-gray-900 hover:text-orange-600 transition-colors flex items-center gap-2"
+                  className="font-medium text-on-surface hover:text-primary transition-colors flex items-center gap-2.5"
                 >
+                  <span className="material-symbols-outlined text-[20px] text-on-surface-variant">
+                    {file.type === 'html' ? 'html' : 'description'}
+                  </span>
                   {file.filename}
                   {file.type === 'html' ? (
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600 border border-blue-100">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-secondary-container text-on-secondary-container">
                       HTML
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface-variant">
                       MD
                     </span>
                   )}
                 </Link>
               </td>
-              <td className="py-4 px-4">
-                <code className="text-sm text-gray-500 font-mono">/{file.slug}{file.type === 'html' ? '/html' : ''}</code>
+              <td className="py-5 px-6">
+                <code className="text-sm font-mono text-on-surface-variant">/{file.slug}{file.type === 'html' ? '/html' : ''}</code>
               </td>
-              <td className="py-4 px-4">
-                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-50 text-green-600">
-                  AKTIVNÍ
+              <td className="py-5 px-6">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-tertiary-fixed/30 text-on-tertiary-fixed-variant">
+                  <span className="w-1.5 h-1.5 rounded-full bg-on-tertiary-container" />
+                  Aktivní
                 </span>
               </td>
-              <td className="py-4 px-4 text-sm text-gray-500">
+              <td className="py-5 px-6 text-sm text-on-surface-variant">
                 {format(new Date(file.createdAt), 'd. MMM yy', { locale: cs })}
-                <br />
-                <span className="text-gray-400">{format(new Date(file.createdAt), 'HH:mm')}</span>
+                <span className="block text-xs opacity-60">{format(new Date(file.createdAt), 'HH:mm')}</span>
               </td>
-              <td className="py-4 px-4">
-                <div className="flex items-center justify-end gap-1">
+              <td className="py-5 px-6">
+                <div className="flex items-center justify-end gap-0.5">
                   {file.type !== 'html' && (
                     <button
                       onClick={() => handleToggleComments(file.slug)}
-                      className={`p-2 rounded transition-colors ${
+                      className={`p-2 rounded-lg transition-all duration-200 ${
                         file.commentsEnabled
-                          ? 'text-blue-600 bg-blue-50 hover:bg-blue-100'
-                          : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                          ? 'text-on-tertiary-container bg-tertiary-fixed/20'
+                          : 'text-on-surface-variant/40 hover:text-on-surface-variant hover:bg-surface-container-highest'
                       }`}
                       title={file.commentsEnabled ? 'Komentáře zapnuty' : 'Komentáře vypnuty'}
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
+                      <span className="material-symbols-outlined text-[20px]">
+                        {file.commentsEnabled ? 'chat_bubble' : 'chat_bubble_outline'}
+                      </span>
                     </button>
                   )}
                   <button
                     onClick={() => copyLink(file.slug, file.type)}
-                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                    className="p-2 text-on-surface-variant/40 hover:text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all duration-200"
                     title="Kopírovat odkaz"
                   >
-                    {copiedSlug === file.slug ? (
-                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                      </svg>
-                    )}
+                    <span className="material-symbols-outlined text-[20px]">
+                      {copiedSlug === file.slug ? 'check' : 'content_copy'}
+                    </span>
                   </button>
                   <Link
                     href={`/${file.slug}${file.type === 'html' ? '/html' : ''}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                    className="p-2 text-on-surface-variant/40 hover:text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all duration-200"
                     title="Otevřít"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
+                    <span className="material-symbols-outlined text-[20px]">open_in_new</span>
                   </Link>
                   <button
                     onClick={() => handleDelete(file.slug)}
                     disabled={deleting === file.slug}
-                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
+                    className="p-2 text-on-surface-variant/40 hover:text-error hover:bg-error-container/30 rounded-lg transition-all duration-200 disabled:opacity-50"
                     title="Zrušit sdílení"
                   >
                     {deleting === file.slug ? (
-                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
+                      <span className="material-symbols-outlined text-[20px] animate-spin">progress_activity</span>
                     ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
+                      <span className="material-symbols-outlined text-[20px]">delete</span>
                     )}
                   </button>
                 </div>

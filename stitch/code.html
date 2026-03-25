@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MD Share - Secure Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#001d36",
+                        "secondary-container": "#c2dcff",
+                        "secondary": "#47607e",
+                        "background": "#f8f9fa",
+                        "tertiary": "#000000",
+                        "on-primary-container": "#79849d",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "primary-container": "#101b30",
+                        "tertiary-fixed": "#78fbb6",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-primary-fixed-variant": "#3c475d",
+                        "primary-fixed-dim": "#bbc6e2",
+                        "tertiary-fixed-dim": "#59de9b",
+                        "secondary-fixed-dim": "#afc9ea",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c4c6cc",
+                        "on-tertiary-fixed-variant": "#005232",
+                        "on-tertiary-container": "#009760",
+                        "on-primary-fixed": "#101b30",
+                        "on-secondary-container": "#48617e",
+                        "tertiary-container": "#002111",
+                        "on-tertiary-fixed": "#002111",
+                        "surface": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f3f4f5",
+                        "secondary-fixed": "#d1e4ff",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-container": "#edeeef",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "primary-fixed": "#d7e2ff",
+                        "primary": "#000000",
+                        "outline": "#74777d",
+                        "on-surface-variant": "#44474c",
+                        "on-background": "#191c1d",
+                        "on-surface": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "surface-tint": "#545e76",
+                        "surface-variant": "#e1e3e4",
+                        "inverse-primary": "#bbc6e2",
+                        "on-secondary-fixed-variant": "#2f4865"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .asymmetric-bg {
+            background: radial-gradient(circle at 10% 10%, #edeeef 0%, transparent 40%),
+                        radial-gradient(circle at 90% 90%, #d1e4ff 0%, transparent 40%);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen flex flex-col items-center justify-center asymmetric-bg px-6 selection:bg-tertiary-fixed selection:text-on-tertiary-fixed-variant">
+<!-- Brand Header -->
+<header class="fixed top-0 w-full p-12 flex justify-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary flex items-center justify-center rounded-xl">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="lock">lock</span>
+</div>
+<h1 class="font-headline text-2xl font-black tracking-tighter text-on-surface">MD Share</h1>
+</div>
+</header>
+<!-- Main Login Canvas -->
+<main class="w-full max-w-[480px] z-10">
+<div class="text-center mb-10">
+<h2 class="font-headline text-4xl font-extrabold tracking-tight mb-3">Welcome Back</h2>
+<p class="text-on-surface-variant font-medium">Access your curated digital workspace</p>
+</div>
+<!-- Asymmetric Elevation Card -->
+<div class="glass-panel rounded-[2rem] p-10 shadow-[0_20px_40px_rgba(25,28,29,0.05)] relative overflow-hidden">
+<!-- Tonal shift background element -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-secondary-fixed/30 rounded-full blur-3xl"></div>
+<form class="relative z-10 flex flex-col gap-8">
+<!-- Admin Key Input Group -->
+<div class="space-y-3">
+<label class="block font-headline text-sm font-bold tracking-wide uppercase text-on-surface-variant ml-1" for="admin-key">
+                        Admin Key
+                    </label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest/50 border-none rounded-xl px-6 py-5 font-mono text-lg tracking-widest placeholder:text-outline focus:ring-2 focus:ring-primary focus:bg-white transition-all duration-300" id="admin-key" placeholder="•••• •••• •••• ••••" type="password"/>
+<div class="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-50 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined" data-icon="key">key</span>
+</div>
+</div>
+</div>
+<!-- Primary Login Action -->
+<button class="w-full bg-primary text-on-primary font-headline font-bold py-5 rounded-xl flex items-center justify-center gap-3 group hover:bg-primary-container transition-all duration-300 transform active:scale-[0.98]">
+<span>Login</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Secondary Actions Cluster -->
+<div class="flex items-center justify-between px-2">
+<a class="text-sm font-semibold text-secondary hover:text-primary transition-colors flex items-center gap-2 group" href="#">
+<span class="material-symbols-outlined text-base" data-icon="help">help</span>
+                        Forgot Key?
+                    </a>
+<a class="text-sm font-semibold text-secondary hover:text-primary transition-colors flex items-center gap-2 group" href="#">
+                        Request Access
+                        <span class="material-symbols-outlined text-base" data-icon="north_east">north_east</span>
+</a>
+</div>
+</form>
+</div>
+<!-- Security Proofing -->
+<div class="mt-12 flex items-center justify-center gap-8">
+<div class="flex items-center gap-2 grayscale opacity-50">
+<span class="material-symbols-outlined text-xl" data-icon="security">security</span>
+<span class="text-xs font-bold uppercase tracking-widest">End-to-End Encrypted</span>
+</div>
+<div class="flex items-center gap-2 grayscale opacity-50">
+<span class="material-symbols-outlined text-xl" data-icon="verified_user">verified_user</span>
+<span class="text-xs font-bold uppercase tracking-widest">ISO 27001 Certified</span>
+</div>
+</div>
+</main>
+<!-- Footer Status Bar -->
+<footer class="fixed bottom-0 w-full p-8 flex justify-center">
+<div class="flex items-center gap-3 bg-surface-container-low px-5 py-2.5 rounded-full">
+<div class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-tertiary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-on-tertiary-container"></span>
+</div>
+<p class="text-[11px] font-bold uppercase tracking-[0.2em] text-on-tertiary-container">
+                System Operational: Cloud-Cluster-04 (Global)
+            </p>
+</div>
+</footer>
+<!-- Background Decorative Elements -->
+<div class="fixed top-1/4 -left-20 w-[500px] h-[500px] rounded-full bg-secondary-fixed opacity-[0.03] blur-[100px] -z-10"></div>
+<div class="fixed bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-tertiary-fixed opacity-[0.05] blur-[120px] -z-10"></div>
+</body></html>

@@ -17,17 +17,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const file = await getFileBySlug(slug);
 
   if (!file) {
-    return {
-      title: 'Soubor neexistuje',
-    };
+    return { title: 'Soubor neexistuje' };
   }
 
   return {
     title: file.filename,
-    robots: {
-      index: false,
-      follow: false,
-    },
+    robots: { index: false, follow: false },
   };
 }
 
@@ -35,48 +30,44 @@ export default async function MarkdownPage({ params }: PageProps) {
   const { slug } = await params;
   const file = await getFileBySlug(slug);
 
-  if (!file) {
-    notFound();
-  }
-
-  if (file.type === 'html') {
-    redirect(`/${slug}/html`);
-  }
+  if (!file) notFound();
+  if (file.type === 'html') redirect(`/${slug}/html`);
 
   const content = await getFileContent(file.blobUrl);
   const settings = await getSettings();
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
-      <div className="max-w-3xl mx-auto px-6 py-12">
-        {/* Header */}
-        <div className="mb-8 pb-6 border-b border-gray-200">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-            <Link href="/admin" className="flex items-center gap-1 hover:text-orange-600 transition-colors">
-              <span>📝</span>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-3xl mx-auto px-8 py-16">
+        {/* Header - no border, spacing as separator */}
+        <div className="mb-12">
+          <div className="flex items-center gap-3 text-sm text-on-surface-variant mb-6">
+            <Link href="/admin" className="flex items-center gap-2 hover:text-on-surface transition-colors font-medium">
+              <div className="w-6 h-6 bg-primary flex items-center justify-center rounded-md">
+                <span className="material-symbols-outlined text-on-primary text-sm">description</span>
+              </div>
               <span>MD Share</span>
             </Link>
-            <span className="text-gray-300">•</span>
+            <span className="text-outline-variant">·</span>
             <span>{format(new Date(file.createdAt), "d. MMMM yyyy", { locale: cs })}</span>
           </div>
 
-          {/* Action Buttons */}
           <ShareButtons content={content} filename={file.filename} slug={file.slug} />
         </div>
 
         {/* Content */}
         <MarkdownRenderer content={content} theme={settings.theme} />
 
-        {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-gray-200 text-center text-gray-400 text-sm">
-          Sdíleno přes <Link href="/admin" className="text-orange-500 hover:text-orange-600 transition-colors">MD Share</Link>
+        {/* Footer - tonal, no border */}
+        <div className="mt-20 pt-8 text-center text-on-surface-variant/50 text-xs font-medium uppercase tracking-[0.15em]">
+          Sdíleno přes{' '}
+          <Link href="/admin" className="text-secondary hover:text-on-surface transition-colors">
+            MD Share
+          </Link>
         </div>
       </div>
 
-      {/* Comments Sidebar */}
-      {file.commentsEnabled && (
-        <CommentSidebar slug={slug} />
-      )}
+      {file.commentsEnabled && <CommentSidebar slug={slug} />}
     </div>
   );
 }
