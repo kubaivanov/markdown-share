@@ -50,7 +50,7 @@ export default function MarkdownRenderer({ content, theme = 'orange' }: Markdown
       prose-a:no-underline prose-a:font-medium
       prose-strong:text-on-surface prose-strong:font-semibold
       prose-code:bg-surface-container-highest/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-lg prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
-      prose-pre:bg-surface-container-low prose-pre:rounded-xl prose-pre:p-0 prose-pre:overflow-x-auto
+      prose-pre:bg-surface-container-low prose-pre:rounded-xl prose-pre:overflow-x-auto
       prose-blockquote:border-l-[3px] prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r-xl prose-blockquote:text-on-surface/70 prose-blockquote:not-italic prose-blockquote:font-body
       prose-ul:text-on-surface/80 prose-ol:text-on-surface/80
       prose-li:marker:text-outline/50 prose-li:my-1.5
