@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey, validateAdminKey } from '@/lib/auth';
-import { getFileBySlug, deleteFile, getFileContent } from '@/lib/storage';
+import { getFileBySlug, deleteFile, getFileContent, toggleCommentsEnabled } from '@/lib/storage';
 
 interface RouteParams {
   params: Promise<{ slug: string }>;
@@ -79,6 +79,42 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     console.error('Delete file error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to delete file' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request: NextRequest, { params }: RouteParams) {
+  const { slug } = await params;
+
+  const adminKey = request.headers.get('x-admin-key');
+  if (!adminKey || !validateAdminKey(adminKey)) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const file = await getFileBySlug(slug);
+
+    if (!file) {
+      return NextResponse.json(
+        { success: false, error: 'File not found' },
+        { status: 404 }
+      );
+    }
+
+    const commentsEnabled = await toggleCommentsEnabled(slug);
+
+    return NextResponse.json({
+      success: true,
+      commentsEnabled,
+    });
+  } catch (error) {
+    console.error('Toggle comments error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to toggle comments' },
       { status: 500 }
     );
   }

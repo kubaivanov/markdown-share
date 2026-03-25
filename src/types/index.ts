@@ -1,3 +1,16 @@
+export type ThemeName = 'orange' | 'blue' | 'green' | 'purple' | 'gray';
+
+export interface AppSettings {
+  theme: ThemeName;
+}
+
+export interface Comment {
+  id: string;
+  author: string;
+  text: string;
+  createdAt: string;
+}
+
 export interface MarkdownFile {
   id: string;
   slug: string;
@@ -7,6 +20,7 @@ export interface MarkdownFile {
   updatedAt: string;
   isActive: boolean;
   type?: 'md' | 'html';
+  commentsEnabled?: boolean;
 }
 
 export interface FileMetadata {

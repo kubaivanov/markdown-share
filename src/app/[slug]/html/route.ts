@@ -22,6 +22,7 @@ export async function GET(request: NextRequest, { params }: RouteProps) {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet',
       },
     });
   } catch (error) {

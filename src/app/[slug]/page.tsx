@@ -1,9 +1,10 @@
 import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getFileBySlug, getFileContent } from '@/lib/storage';
+import { getFileBySlug, getFileContent, getSettings } from '@/lib/storage';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 import ShareButtons from '@/components/ShareButtons';
+import CommentSidebar from '@/components/CommentSidebar';
 import { format } from 'date-fns';
 import { cs } from 'date-fns/locale';
 
@@ -43,6 +44,7 @@ export default async function MarkdownPage({ params }: PageProps) {
   }
 
   const content = await getFileContent(file.blobUrl);
+  const settings = await getSettings();
 
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
@@ -63,13 +65,18 @@ export default async function MarkdownPage({ params }: PageProps) {
         </div>
 
         {/* Content */}
-        <MarkdownRenderer content={content} />
+        <MarkdownRenderer content={content} theme={settings.theme} />
 
         {/* Footer */}
         <div className="mt-12 pt-6 border-t border-gray-200 text-center text-gray-400 text-sm">
           Sdíleno přes <Link href="/admin" className="text-orange-500 hover:text-orange-600 transition-colors">MD Share</Link>
         </div>
       </div>
+
+      {/* Comments Sidebar */}
+      {file.commentsEnabled && (
+        <CommentSidebar slug={slug} />
+      )}
     </div>
   );
 }

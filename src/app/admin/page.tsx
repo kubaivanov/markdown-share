@@ -3,7 +3,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import FileList from '@/components/FileList';
-import { MarkdownFile } from '@/types';
+import { MarkdownFile, ThemeName } from '@/types';
+
+const themes: { value: ThemeName; label: string; color: string }[] = [
+  { value: 'orange', label: 'Oranžová', color: 'bg-orange-500' },
+  { value: 'blue', label: 'Modrá', color: 'bg-blue-500' },
+  { value: 'green', label: 'Zelená', color: 'bg-emerald-500' },
+  { value: 'purple', label: 'Fialová', color: 'bg-violet-500' },
+  { value: 'gray', label: 'Šedá', color: 'bg-gray-500' },
+];
 
 export default function AdminPage() {
   const [adminKey, setAdminKey] = useState('');
@@ -11,6 +19,7 @@ export default function AdminPage() {
   const [files, setFiles] = useState<MarkdownFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [theme, setTheme] = useState<ThemeName>('orange');
 
   // Check for saved admin key
   useEffect(() => {
@@ -56,6 +65,13 @@ export default function AdminPage() {
         setFiles(data.files);
         setIsAuthenticated(true);
         localStorage.setItem('md-share-admin-key', key);
+
+        // Fetch settings
+        const settingsResponse = await fetch('/api/settings');
+        if (settingsResponse.ok) {
+          const settingsData = await settingsResponse.json();
+          setTheme(settingsData.settings?.theme || 'orange');
+        }
       } else {
         setError('Nastala chyba při načítání souborů');
       }
@@ -77,6 +93,22 @@ export default function AdminPage() {
     setIsAuthenticated(false);
     setAdminKey('');
     setFiles([]);
+  };
+
+  const handleThemeChange = async (newTheme: ThemeName) => {
+    setTheme(newTheme);
+    try {
+      await fetch('/api/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': adminKey,
+        },
+        body: JSON.stringify({ theme: newTheme }),
+      });
+    } catch (err) {
+      console.error('Theme update error:', err);
+    }
   };
 
   if (!isAuthenticated) {
@@ -142,12 +174,31 @@ export default function AdminPage() {
             <span>📝</span>
             MD Share
           </Link>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 text-gray-500 hover:text-gray-700 text-sm transition-colors"
-          >
-            Odhlásit se
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Téma:</span>
+              <div className="flex gap-1">
+                {themes.map((t) => (
+                  <button
+                    key={t.value}
+                    onClick={() => handleThemeChange(t.value)}
+                    className={`w-6 h-6 rounded-full ${t.color} transition-all ${
+                      theme === t.value
+                        ? 'ring-2 ring-offset-2 ring-gray-400 scale-110'
+                        : 'hover:scale-110 opacity-60 hover:opacity-100'
+                    }`}
+                    title={t.label}
+                  />
+                ))}
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-gray-500 hover:text-gray-700 text-sm transition-colors"
+            >
+              Odhlásit se
+            </button>
+          </div>
         </div>
       </header>
 

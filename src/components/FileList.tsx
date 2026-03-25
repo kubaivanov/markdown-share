@@ -16,6 +16,26 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
   const [deleting, setDeleting] = useState<string | null>(null);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
 
+  const handleToggleComments = async (slug: string) => {
+    try {
+      const response = await fetch(`/api/files/${slug}`, {
+        method: 'PATCH',
+        headers: {
+          'X-Admin-Key': adminKey,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFiles(files.map(f =>
+          f.slug === slug ? { ...f, commentsEnabled: data.commentsEnabled } : f
+        ));
+      }
+    } catch (error) {
+      console.error('Toggle comments error:', error);
+    }
+  };
+
   const handleDelete = async (slug: string) => {
     if (!confirm('Opravdu chcete zrušit sdílení tohoto souboru?')) {
       return;
@@ -112,6 +132,21 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
               </td>
               <td className="py-4 px-4">
                 <div className="flex items-center justify-end gap-1">
+                  {file.type !== 'html' && (
+                    <button
+                      onClick={() => handleToggleComments(file.slug)}
+                      className={`p-2 rounded transition-colors ${
+                        file.commentsEnabled
+                          ? 'text-blue-600 bg-blue-50 hover:bg-blue-100'
+                          : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                      }`}
+                      title={file.commentsEnabled ? 'Komentáře zapnuty' : 'Komentáře vypnuty'}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </button>
+                  )}
                   <button
                     onClick={() => copyLink(file.slug, file.type)}
                     className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"

@@ -2,9 +2,11 @@ import { put, del } from '@vercel/blob';
 import { kv } from '@vercel/kv';
 import { nanoid } from 'nanoid';
 import slugify from 'slugify';
-import { MarkdownFile } from '@/types';
+import { MarkdownFile, AppSettings, Comment } from '@/types';
 
 const FILES_KEY = 'markdown-files';
+const SETTINGS_KEY = 'settings';
+const COMMENTS_PREFIX = 'comments:';
 
 export async function getAllFiles(): Promise<MarkdownFile[]> {
   const files = await kv.hgetall<Record<string, MarkdownFile>>(FILES_KEY);
@@ -114,5 +116,61 @@ export async function getFileContent(blobUrl: string): Promise<string> {
   }
 
   return response.text();
+}
+
+export async function getSettings(): Promise<AppSettings> {
+  const settings = await kv.get<AppSettings>(SETTINGS_KEY);
+  return settings || { theme: 'orange' };
+}
+
+export async function updateSettings(settings: Partial<AppSettings>): Promise<AppSettings> {
+  const current = await getSettings();
+  const updated = { ...current, ...settings };
+  await kv.set(SETTINGS_KEY, updated);
+  return updated;
+}
+
+export async function toggleCommentsEnabled(slug: string): Promise<boolean> {
+  const file = await kv.hget<MarkdownFile>(FILES_KEY, slug);
+  if (!file) return false;
+
+  const updatedFile: MarkdownFile = {
+    ...file,
+    commentsEnabled: !file.commentsEnabled,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await kv.hset(FILES_KEY, { [slug]: updatedFile });
+  return updatedFile.commentsEnabled || false;
+}
+
+export async function getComments(slug: string): Promise<Comment[]> {
+  const comments = await kv.get<Comment[]>(`${COMMENTS_PREFIX}${slug}`);
+  return comments || [];
+}
+
+export async function addComment(slug: string, author: string, text: string): Promise<Comment> {
+  const comment: Comment = {
+    id: nanoid(),
+    author: author.trim() || '',
+    text: text.trim(),
+    createdAt: new Date().toISOString(),
+  };
+
+  const comments = await getComments(slug);
+  comments.push(comment);
+  await kv.set(`${COMMENTS_PREFIX}${slug}`, comments);
+
+  return comment;
+}
+
+export async function deleteComment(slug: string, commentId: string): Promise<boolean> {
+  const comments = await getComments(slug);
+  const filtered = comments.filter(c => c.id !== commentId);
+
+  if (filtered.length === comments.length) return false;
+
+  await kv.set(`${COMMENTS_PREFIX}${slug}`, filtered);
+  return true;
 }
 
