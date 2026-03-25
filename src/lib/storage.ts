@@ -175,3 +175,27 @@ export async function deleteComment(slug: string, commentId: string): Promise<bo
   return true;
 }
 
+export async function editComment(slug: string, commentId: string, text: string): Promise<Comment | null> {
+  const comments = await getComments(slug);
+  const index = comments.findIndex(c => c.id === commentId);
+
+  if (index === -1) return null;
+
+  comments[index] = { ...comments[index], text: text.trim() };
+  await kv.set(`${COMMENTS_PREFIX}${slug}`, comments);
+
+  return comments[index];
+}
+
+export async function toggleCommentDone(slug: string, commentId: string): Promise<Comment | null> {
+  const comments = await getComments(slug);
+  const index = comments.findIndex(c => c.id === commentId);
+
+  if (index === -1) return null;
+
+  comments[index] = { ...comments[index], done: !comments[index].done };
+  await kv.set(`${COMMENTS_PREFIX}${slug}`, comments);
+
+  return comments[index];
+}
+

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getComments, addComment, deleteComment, getFileBySlug } from '@/lib/storage';
+import { getComments, addComment, deleteComment, editComment, toggleCommentDone, getFileBySlug } from '@/lib/storage';
 
 interface RouteParams {
   params: Promise<{ slug: string }>;
@@ -105,6 +105,66 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     console.error('Delete comment error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to delete comment' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request: NextRequest, { params }: RouteParams) {
+  const { slug } = await params;
+
+  try {
+    const body = await request.json();
+    const { id, action, text } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: 'Comment ID is required' },
+        { status: 400 }
+      );
+    }
+
+    if (action === 'edit') {
+      if (!text || typeof text !== 'string' || !text.trim()) {
+        return NextResponse.json(
+          { success: false, error: 'Text is required' },
+          { status: 400 }
+        );
+      }
+
+      const comment = await editComment(slug, id, text);
+
+      if (!comment) {
+        return NextResponse.json(
+          { success: false, error: 'Comment not found' },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({ success: true, comment });
+    }
+
+    if (action === 'done') {
+      const comment = await toggleCommentDone(slug, id);
+
+      if (!comment) {
+        return NextResponse.json(
+          { success: false, error: 'Comment not found' },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({ success: true, comment });
+    }
+
+    return NextResponse.json(
+      { success: false, error: 'Invalid action' },
+      { status: 400 }
+    );
+  } catch (error) {
+    console.error('Patch comment error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to update comment' },
       { status: 500 }
     );
   }

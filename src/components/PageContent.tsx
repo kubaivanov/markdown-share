@@ -26,7 +26,7 @@ export default function PageContent({
   theme,
   commentsEnabled,
 }: PageContentProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(commentsEnabled);
   const [activeSelection, setActiveSelection] = useState('');
   const [highlightCommentId, setHighlightCommentId] = useState<string>();
 

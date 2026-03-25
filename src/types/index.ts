@@ -9,6 +9,7 @@ export interface Comment {
   author: string;
   text: string;
   selection?: string;
+  done?: boolean;
   createdAt: string;
 }
 

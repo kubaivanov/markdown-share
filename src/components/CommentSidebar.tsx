@@ -27,6 +27,8 @@ export default function CommentSidebar({
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
   const highlightedRef = useRef<HTMLDivElement>(null);
 
   const fetchComments = useCallback(async () => {
@@ -99,6 +101,54 @@ export default function CommentSidebar({
     }
   };
 
+  const handleStartEdit = (comment: Comment) => {
+    setEditingId(comment.id);
+    setEditText(comment.text);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditText('');
+  };
+
+  const handleSaveEdit = async (commentId: string) => {
+    if (!editText.trim()) return;
+
+    try {
+      const response = await fetch(`/api/comments/${slug}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: commentId, action: 'edit', text: editText.trim() }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setComments(comments.map(c => c.id === commentId ? data.comment : c));
+        setEditingId(null);
+        setEditText('');
+      }
+    } catch (error) {
+      console.error('Failed to edit comment:', error);
+    }
+  };
+
+  const handleToggleDone = async (commentId: string) => {
+    try {
+      const response = await fetch(`/api/comments/${slug}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: commentId, action: 'done' }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setComments(comments.map(c => c.id === commentId ? data.comment : c));
+      }
+    } catch (error) {
+      console.error('Failed to toggle done:', error);
+    }
+  };
+
   return (
     <>
       {/* Toggle Button */}
@@ -110,7 +160,7 @@ export default function CommentSidebar({
         <span className="material-symbols-outlined text-on-surface-variant">forum</span>
         {comments.length > 0 && (
           <span className="absolute -top-1 -left-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
-            {comments.length}
+            {comments.filter(c => !c.done).length || comments.length}
           </span>
         )}
       </button>
@@ -187,7 +237,7 @@ export default function CommentSidebar({
                 ref={highlightCommentId === comment.id ? highlightedRef : undefined}
                 className={`bg-surface-container-lowest/60 rounded-xl p-4 transition-all duration-300 ${
                   highlightCommentId === comment.id ? 'ring-2 ring-tertiary-fixed' : ''
-                }`}
+                } ${comment.done ? 'opacity-60' : ''}`}
               >
                 {/* Selection Quote */}
                 {comment.selection && (
@@ -196,6 +246,7 @@ export default function CommentSidebar({
                   </div>
                 )}
 
+                {/* Header */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 bg-surface-container-highest rounded-full flex items-center justify-center">
                     <span className="material-symbols-outlined text-[14px] text-on-surface-variant">person</span>
@@ -206,15 +257,71 @@ export default function CommentSidebar({
                   <span className="text-[11px] text-on-surface-variant/50">
                     {format(new Date(comment.createdAt), 'd.M. HH:mm', { locale: cs })}
                   </span>
-                  <button
-                    onClick={() => handleDelete(comment.id)}
-                    className="p-1 text-on-surface-variant/30 hover:text-error rounded transition-colors"
-                    title="Smazat"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">close</span>
-                  </button>
                 </div>
-                <p className="text-sm text-on-surface/80 whitespace-pre-wrap leading-relaxed">{comment.text}</p>
+
+                {/* Text or Edit Mode */}
+                {editingId === comment.id ? (
+                  <div className="space-y-2">
+                    <textarea
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 bg-surface-container-highest/50 border-none rounded-lg text-sm text-on-surface focus:ring-2 focus:ring-primary resize-none"
+                      autoFocus
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleSaveEdit(comment.id)}
+                        className="flex-1 px-3 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-bold transition-colors"
+                      >
+                        Uložit
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="px-3 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-lg text-xs font-bold transition-colors"
+                      >
+                        Zrušit
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className={`text-sm text-on-surface/80 whitespace-pre-wrap leading-relaxed ${comment.done ? 'line-through' : ''}`}>
+                    {comment.text}
+                  </p>
+                )}
+
+                {/* Action Buttons */}
+                {editingId !== comment.id && (
+                  <div className="flex items-center gap-1 mt-3 pt-3 border-t border-outline-variant/10">
+                    <button
+                      onClick={() => handleToggleDone(comment.id)}
+                      className={`p-1.5 rounded-lg transition-all duration-200 ${
+                        comment.done
+                          ? 'text-on-tertiary-container bg-tertiary-fixed/20'
+                          : 'text-on-surface-variant/40 hover:text-on-tertiary-container hover:bg-tertiary-fixed/10'
+                      }`}
+                      title={comment.done ? 'Označit jako nedokončené' : 'Označit jako hotové'}
+                    >
+                      <span className="material-symbols-outlined text-[18px]">
+                        {comment.done ? 'check_circle' : 'radio_button_unchecked'}
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => handleStartEdit(comment)}
+                      className="p-1.5 text-on-surface-variant/40 hover:text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all duration-200"
+                      title="Upravit"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(comment.id)}
+                      className="p-1.5 text-on-surface-variant/40 hover:text-error hover:bg-error-container/30 rounded-lg transition-all duration-200 ml-auto"
+                      title="Smazat"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
+                )}
               </div>
             ))
           )}
