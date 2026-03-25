@@ -88,6 +88,8 @@ export default function CommentSidebar({
   };
 
   const handleDelete = async (commentId: string) => {
+    if (!confirm('Smazat tento komentář?')) return;
+
     try {
       const response = await fetch(`/api/comments/${slug}?id=${commentId}`, {
         method: 'DELETE',

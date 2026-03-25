@@ -180,8 +180,8 @@ body {
 
 /* Annotation highlights in markdown */
 .annotation-highlight {
-  background: rgba(120, 251, 182, 0.2);
-  border-bottom: 2px solid rgba(0, 110, 70, 0.3);
+  background: rgba(249, 115, 22, 0.15);
+  border-bottom: 2px solid rgba(234, 88, 12, 0.35);
   border-radius: 2px;
   padding: 0 2px;
   cursor: pointer;
@@ -189,5 +189,57 @@ body {
 }
 
 .annotation-highlight:hover {
-  background: rgba(120, 251, 182, 0.4);
+  background: rgba(249, 115, 22, 0.3);
+}
+
+.annotation-highlight[data-theme="blue"] {
+  background: rgba(59, 130, 246, 0.15);
+  border-bottom-color: rgba(37, 99, 235, 0.35);
+}
+.annotation-highlight[data-theme="blue"]:hover {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+.annotation-highlight[data-theme="green"] {
+  background: rgba(16, 185, 129, 0.15);
+  border-bottom-color: rgba(5, 150, 105, 0.35);
+}
+.annotation-highlight[data-theme="green"]:hover {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+.annotation-highlight[data-theme="purple"] {
+  background: rgba(139, 92, 246, 0.15);
+  border-bottom-color: rgba(124, 58, 237, 0.35);
+}
+.annotation-highlight[data-theme="purple"]:hover {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+.annotation-highlight[data-theme="gray"] {
+  background: rgba(107, 114, 128, 0.15);
+  border-bottom-color: rgba(75, 85, 99, 0.35);
+}
+.annotation-highlight[data-theme="gray"]:hover {
+  background: rgba(107, 114, 128, 0.3);
+}
+
+/* GFM Task Lists */
+.prose li input[type="checkbox"] {
+  margin-right: 0.5em;
+  margin-top: 0.15em;
+  width: 1em;
+  height: 1em;
+  accent-color: var(--color-on-tertiary-container);
+  vertical-align: middle;
+}
+
+.prose li {
+  line-height: 1.75;
+}
+
+.prose ul li,
+.prose ol li {
+  padding-top: 0.15em;
+  padding-bottom: 0.15em;
 }

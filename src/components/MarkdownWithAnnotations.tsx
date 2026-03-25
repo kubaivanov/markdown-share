@@ -17,7 +17,15 @@ function escapeRegex(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function preprocessContent(content: string, comments: Comment[]): string {
+const themeHighlightColors: Record<string, { bg: string; border: string; hover: string }> = {
+  orange: { bg: 'rgba(249, 115, 22, 0.15)', border: 'rgba(234, 88, 12, 0.35)', hover: 'rgba(249, 115, 22, 0.3)' },
+  blue: { bg: 'rgba(59, 130, 246, 0.15)', border: 'rgba(37, 99, 235, 0.35)', hover: 'rgba(59, 130, 246, 0.3)' },
+  green: { bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(5, 150, 105, 0.35)', hover: 'rgba(16, 185, 129, 0.3)' },
+  purple: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(124, 58, 237, 0.35)', hover: 'rgba(139, 92, 246, 0.3)' },
+  gray: { bg: 'rgba(107, 114, 128, 0.15)', border: 'rgba(75, 85, 99, 0.35)', hover: 'rgba(107, 114, 128, 0.3)' },
+};
+
+function preprocessContent(content: string, comments: Comment[], theme: string): string {
   let processed = content;
 
   const sorted = [...comments]
@@ -30,7 +38,7 @@ function preprocessContent(content: string, comments: Comment[]): string {
     const regex = new RegExp(`(${escaped})`, 'g');
     processed = processed.replace(
       regex,
-      `<mark data-comment-id="${comment.id}" class="annotation-highlight">$1</mark>`
+      `<mark data-comment-id="${comment.id}" class="annotation-highlight" data-theme="${theme}">$1</mark>`
     );
   }
 
@@ -99,7 +107,7 @@ export default function MarkdownWithAnnotations({
   }, [onHighlightClick]);
 
   const processedContent = commentsEnabled
-    ? preprocessContent(content, comments)
+    ? preprocessContent(content, comments, theme || 'orange')
     : content;
 
   return (
