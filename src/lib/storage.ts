@@ -149,11 +149,12 @@ export async function getComments(slug: string): Promise<Comment[]> {
   return comments || [];
 }
 
-export async function addComment(slug: string, author: string, text: string): Promise<Comment> {
+export async function addComment(slug: string, author: string, text: string, selection?: string): Promise<Comment> {
   const comment: Comment = {
     id: nanoid(),
     author: author.trim() || '',
     text: text.trim(),
+    selection: selection?.trim() || undefined,
     createdAt: new Date().toISOString(),
   };
 

@@ -177,3 +177,17 @@ body {
   background: rgba(120, 251, 182, 0.25);
   color: var(--color-on-surface);
 }
+
+/* Annotation highlights in markdown */
+.annotation-highlight {
+  background: rgba(120, 251, 182, 0.2);
+  border-bottom: 2px solid rgba(0, 110, 70, 0.3);
+  border-radius: 2px;
+  padding: 0 2px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.annotation-highlight:hover {
+  background: rgba(120, 251, 182, 0.4);
+}

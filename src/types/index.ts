@@ -8,6 +8,7 @@ export interface Comment {
   id: string;
   author: string;
   text: string;
+  selection?: string;
   createdAt: string;
 }
 

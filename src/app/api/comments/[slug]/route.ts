@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateAdminKey } from '@/lib/auth';
 import { getComments, addComment, deleteComment, getFileBySlug } from '@/lib/storage';
 
 interface RouteParams {
@@ -58,7 +57,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
-    const { author, text } = body;
+    const { author, text, selection } = body;
 
     if (!text || typeof text !== 'string' || !text.trim()) {
       return NextResponse.json(
@@ -67,7 +66,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const comment = await addComment(slug, author || '', text);
+    const comment = await addComment(slug, author || '', text, selection);
     return NextResponse.json({ success: true, comment }, { status: 201 });
   } catch (error) {
     console.error('Add comment error:', error);
@@ -80,14 +79,6 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const { slug } = await params;
-
-  const adminKey = request.headers.get('x-admin-key');
-  if (!adminKey || !validateAdminKey(adminKey)) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 }
-    );
-  }
 
   try {
     const url = new URL(request.url);
