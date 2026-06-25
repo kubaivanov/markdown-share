@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-import { Manrope, Inter, Geist_Mono } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-headline",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin", "latin-ext"],
-});
-
-const inter = Inter({
-  variable: "--font-body",
-  subsets: ["latin", "latin-ext"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -44,13 +35,9 @@ export default function RootLayout({
       <head>
         <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
         <meta name="googlebot" content="noindex, nofollow" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-          rel="stylesheet"
-        />
       </head>
       <body
-        className={`${manrope.variable} ${inter.variable} ${geistMono.variable} font-body antialiased bg-background text-on-surface min-h-screen`}
+        className={`${spaceGrotesk.variable} font-body antialiased bg-background text-on-surface min-h-screen`}
       >
         {children}
       </body>

@@ -156,12 +156,12 @@ export default function CommentSidebar({
       {/* Toggle Button */}
       <button
         onClick={() => onOpenChange(!isOpen)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 glass-panel border-0 border-l border-outline-variant/15 rounded-l-xl px-2.5 py-4 ambient-shadow hover:px-3 transition-all duration-300"
+        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-background border border-r-0 border-outline-variant px-2.5 py-4 hover:bg-surface-container-low transition-colors"
         title={isOpen ? 'Zavřít komentáře' : 'Otevřít komentáře'}
       >
-        <span className="material-symbols-outlined text-on-surface-variant">forum</span>
+        <span className="text-on-surface-variant text-sm font-semibold">C</span>
         {comments.length > 0 && (
-          <span className="absolute -top-1 -left-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+          <span className="absolute -top-1 -left-1 bg-primary text-on-primary text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
             {comments.filter(c => !c.done).length || comments.length}
           </span>
         )}
@@ -169,31 +169,30 @@ export default function CommentSidebar({
 
       {/* Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-on-surface/5" onClick={() => onOpenChange(false)} />
+        <div className="fixed inset-0 z-40 bg-on-surface/10" onClick={() => onOpenChange(false)} />
       )}
 
       {/* Sidebar */}
-      <div className={`fixed top-0 right-0 h-full w-80 glass-panel border-l border-outline-variant/15 z-50 flex flex-col transition-transform duration-300 ${
+      <div className={`fixed top-0 right-0 h-full w-80 bg-background border-l border-outline-variant z-50 flex flex-col transition-transform duration-300 ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-outline-variant">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-on-surface-variant text-xl">forum</span>
             <h3 className="font-headline font-bold text-on-surface">Komentáře</h3>
           </div>
           <button
             onClick={() => onOpenChange(false)}
-            className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-lg transition-all duration-200"
+            className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors"
           >
-            <span className="material-symbols-outlined">close</span>
+            <span>×</span>
           </button>
         </div>
 
         {/* Selection Preview */}
         {selection && (
-          <div className="mx-6 mb-4 px-4 py-3 bg-tertiary-fixed/15 rounded-xl border-l-[3px] border-on-tertiary-container">
-            <p className="text-xs font-bold uppercase tracking-wider text-on-tertiary-container mb-1">Označený text</p>
+          <div className="mx-6 my-4 px-4 py-3 bg-surface-container-low border-l border-secondary">
+            <p className="text-xs font-semibold text-secondary mb-1">Označený text</p>
             <p className="text-sm text-on-surface/70 italic line-clamp-3">&ldquo;{selection}&rdquo;</p>
           </div>
         )}
@@ -205,19 +204,19 @@ export default function CommentSidebar({
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="Jméno (nepovinné)"
-            className="w-full px-4 py-3 bg-surface-container-highest/50 border-none rounded-xl text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-300"
+            className="w-full px-4 py-3 bg-background border border-outline-variant text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-on-surface transition-colors"
           />
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={selection ? 'Napište poznámku k označenému textu...' : 'Napište poznámku...'}
             rows={3}
-            className="w-full px-4 py-3 bg-surface-container-highest/50 border-none rounded-xl text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest resize-none transition-all duration-300"
+            className="w-full px-4 py-3 bg-background border border-outline-variant text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-on-surface resize-none transition-colors"
           />
           <button
             type="submit"
             disabled={submitting || !text.trim()}
-            className="w-full px-4 py-3 bg-primary hover:bg-primary-container disabled:opacity-40 disabled:hover:bg-primary rounded-xl text-on-primary text-sm font-bold font-headline transition-all duration-300 transform active:scale-[0.98]"
+            className="w-full px-4 py-3 bg-primary hover:bg-background text-on-primary hover:text-primary border border-primary disabled:opacity-40 disabled:hover:bg-primary disabled:hover:text-on-primary text-sm font-semibold transition-colors"
           >
             {submitting ? 'Odesílám...' : 'Odeslat'}
           </button>
@@ -229,7 +228,6 @@ export default function CommentSidebar({
             <div className="text-center py-10 text-on-surface-variant/50 text-sm">Načítám...</div>
           ) : comments.length === 0 ? (
             <div className="text-center py-10">
-              <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 mb-2 block">chat_bubble_outline</span>
               <p className="text-on-surface-variant/50 text-sm">Zatím žádné komentáře</p>
             </div>
           ) : (
@@ -237,21 +235,21 @@ export default function CommentSidebar({
               <div
                 key={comment.id}
                 ref={highlightCommentId === comment.id ? highlightedRef : undefined}
-                className={`bg-surface-container-lowest/60 rounded-xl p-4 transition-all duration-300 ${
-                  highlightCommentId === comment.id ? 'ring-2 ring-tertiary-fixed' : ''
+                className={`border border-outline-variant bg-background p-4 transition-all duration-300 ${
+                  highlightCommentId === comment.id ? 'ring-2 ring-secondary' : ''
                 } ${comment.done ? 'opacity-60' : ''}`}
               >
                 {/* Selection Quote */}
                 {comment.selection && (
-                  <div className="mb-3 px-3 py-2 bg-tertiary-fixed/10 rounded-lg border-l-2 border-on-tertiary-container/30">
+                  <div className="mb-3 px-3 py-2 bg-surface-container-low border-l border-secondary">
                     <p className="text-xs text-on-surface-variant/60 italic line-clamp-2">&ldquo;{comment.selection}&rdquo;</p>
                   </div>
                 )}
 
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 bg-surface-container-highest rounded-full flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[14px] text-on-surface-variant">person</span>
+                  <div className="w-6 h-6 bg-surface-container-low border border-outline-variant rounded-full flex items-center justify-center">
+                    <span className="text-[11px] text-on-surface-variant">{(comment.author || 'A').charAt(0).toUpperCase()}</span>
                   </div>
                   <span className="text-sm font-bold text-on-surface flex-1">
                     {comment.author || 'Anonymní'}
@@ -268,19 +266,19 @@ export default function CommentSidebar({
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
                       rows={3}
-                      className="w-full px-3 py-2 bg-surface-container-highest/50 border-none rounded-lg text-sm text-on-surface focus:ring-2 focus:ring-primary resize-none"
+                      className="w-full px-3 py-2 bg-background border border-outline-variant text-sm text-on-surface focus:outline-none focus:border-on-surface resize-none"
                       autoFocus
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleSaveEdit(comment.id)}
-                        className="flex-1 px-3 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-bold transition-colors"
+                        className="flex-1 px-3 py-1.5 bg-primary text-on-primary border border-primary text-xs font-semibold transition-colors hover:bg-background hover:text-primary"
                       >
                         Uložit
                       </button>
                       <button
                         onClick={handleCancelEdit}
-                        className="px-3 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-lg text-xs font-bold transition-colors"
+                        className="px-3 py-1.5 bg-background border border-outline-variant text-on-surface-variant text-xs font-semibold transition-colors hover:text-on-surface"
                       >
                         Zrušit
                       </button>
@@ -294,33 +292,31 @@ export default function CommentSidebar({
 
                 {/* Action Buttons */}
                 {editingId !== comment.id && (
-                  <div className="flex items-center gap-1 mt-3 pt-3 border-t border-outline-variant/10">
+                  <div className="flex items-center gap-1 mt-3 pt-3 border-t border-outline-variant">
                     <button
                       onClick={() => handleToggleDone(comment.id)}
-                      className={`p-1.5 rounded-lg transition-all duration-200 ${
+                      className={`p-1.5 transition-all duration-200 ${
                         comment.done
-                          ? 'text-on-tertiary-container bg-tertiary-fixed/20'
-                          : 'text-on-surface-variant/40 hover:text-on-tertiary-container hover:bg-tertiary-fixed/10'
+                          ? 'text-secondary bg-surface-container-low'
+                          : 'text-on-surface-variant/50 hover:text-secondary hover:bg-surface-container-low'
                       }`}
                       title={comment.done ? 'Označit jako nedokončené' : 'Označit jako hotové'}
                     >
-                      <span className="material-symbols-outlined text-[18px]">
-                        {comment.done ? 'check_circle' : 'radio_button_unchecked'}
-                      </span>
+                      <span className="text-sm font-semibold">{comment.done ? '✓' : '○'}</span>
                     </button>
                     <button
                       onClick={() => handleStartEdit(comment)}
-                      className="p-1.5 text-on-surface-variant/40 hover:text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all duration-200"
+                      className="p-1.5 text-on-surface-variant/50 hover:text-on-surface hover:bg-surface-container-low transition-all duration-200"
                       title="Upravit"
                     >
-                      <span className="material-symbols-outlined text-[18px]">edit</span>
+                      <span className="text-sm font-semibold">edit</span>
                     </button>
                     <button
                       onClick={() => handleDelete(comment.id)}
-                      className="p-1.5 text-on-surface-variant/40 hover:text-error hover:bg-error-container/30 rounded-lg transition-all duration-200 ml-auto"
+                      className="p-1.5 text-on-surface-variant/50 hover:text-error hover:bg-error-container transition-all duration-200 ml-auto"
                       title="Smazat"
                     >
-                      <span className="material-symbols-outlined text-[18px]">delete</span>
+                      <span className="text-sm font-semibold">del</span>
                     </button>
                   </div>
                 )}

@@ -108,10 +108,10 @@ export default function MarkdownWithAnnotations({
       {buttonPos && commentsEnabled && (
         <button
           onClick={handleAddNote}
-          className="absolute z-30 inline-flex items-center gap-1.5 px-3 py-2 bg-primary text-on-primary rounded-xl text-xs font-bold font-headline shadow-lg hover:bg-primary-container transition-all duration-200 animate-in"
+          className="absolute z-30 inline-flex items-center gap-1.5 px-3 py-2 bg-primary text-on-primary border border-primary text-xs font-semibold hover:bg-background hover:text-primary transition-colors animate-in"
           style={{ top: buttonPos.top, left: buttonPos.left }}
         >
-          <span className="material-symbols-outlined text-[16px]">add_comment</span>
+          <span>+</span>
           Poznámka
         </button>
       )}

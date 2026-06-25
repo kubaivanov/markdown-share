@@ -47,18 +47,28 @@ export default function PageContent({
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-3xl mx-auto px-8 py-16">
+      <header className="sticky top-0 z-40 bg-background border-b border-outline-variant">
+        <div className="max-w-6xl mx-auto px-6 md:px-8 py-4 flex items-center justify-between gap-4">
+          <Link href="/admin" className="text-base font-bold tracking-tight hover:text-on-surface-variant transition-colors">
+            jakubivanov<span className="text-on-surface-variant">.</span>
+          </Link>
+          <span className="text-sm text-on-surface-variant">shared doc</span>
+        </div>
+      </header>
+
+      <main className="max-w-2xl mx-auto px-6 md:px-8 py-12 md:py-16">
         <div className="mb-12">
-          <div className="flex items-center gap-3 text-sm text-on-surface-variant mb-6">
-            <Link href="/admin" className="flex items-center gap-2 hover:text-on-surface transition-colors font-medium">
-              <div className="w-6 h-6 bg-primary flex items-center justify-center rounded-md">
-                <span className="material-symbols-outlined text-on-primary text-sm">description</span>
-              </div>
-              <span>MD Share</span>
+          <div className="flex flex-wrap items-center gap-3 text-sm text-on-surface-variant mb-6">
+            <Link href="/admin" className="hover:text-on-surface transition-colors font-medium">
+              MD Share
             </Link>
             <span className="text-outline-variant">·</span>
             <span>{format(new Date(createdAt), "d. MMMM yyyy", { locale: cs })}</span>
           </div>
+
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-on-surface mb-8 break-words">
+            {filename}
+          </h1>
 
           <ShareButtons content={content} filename={filename} slug={slug} />
         </div>
@@ -72,13 +82,13 @@ export default function PageContent({
           onHighlightClick={handleHighlightClick}
         />
 
-        <div className="mt-20 pt-8 text-center text-on-surface-variant/50 text-xs font-medium uppercase tracking-[0.15em]">
+        <div className="mt-20 pt-8 border-t border-outline-variant text-center text-on-surface-variant text-sm">
           Sdíleno přes{' '}
           <Link href="/admin" className="text-secondary hover:text-on-surface transition-colors">
             MD Share
           </Link>
         </div>
-      </div>
+      </main>
 
       {commentsEnabled && (
         <CommentSidebar

@@ -56,48 +56,43 @@ export default function ShareButtons({ content, filename, slug }: ShareButtonsPr
       {/* Download */}
       <button
         onClick={handleDownload}
-        className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest hover:bg-surface-container-low rounded-xl text-on-surface text-sm font-semibold transition-all duration-200"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-background hover:bg-surface-container-low border border-outline-variant hover:border-on-surface text-on-surface text-sm font-medium transition-colors"
       >
-        <span className="material-symbols-outlined text-lg text-on-surface-variant">download</span>
+        <span className="text-on-surface-variant">↓</span>
         Stáhnout
       </button>
 
       {/* Copy Link */}
       <button
         onClick={handleCopyLink}
-        className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest hover:bg-surface-container-low rounded-xl text-on-surface text-sm font-semibold transition-all duration-200"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-background hover:bg-surface-container-low border border-outline-variant hover:border-on-surface text-on-surface text-sm font-medium transition-colors"
       >
-        <span className="material-symbols-outlined text-lg text-on-surface-variant">
-          {copied ? 'check' : 'link'}
-        </span>
+        <span className="text-on-surface-variant">{copied ? '✓' : '↗'}</span>
         {copied ? 'Zkopírováno!' : 'Kopírovat odkaz'}
       </button>
 
       {/* Spacer */}
-      <div className="w-px bg-outline-variant/20 mx-1 self-stretch" />
+      <div className="hidden md:block w-px bg-outline-variant mx-1 self-stretch" />
 
       {/* AI Buttons - primary gradient */}
       <button
         onClick={openInChatGPT}
-        className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-container rounded-xl text-on-primary text-sm font-semibold transition-all duration-300"
+        className="inline-flex items-center px-4 py-2.5 bg-primary hover:bg-background text-on-primary hover:text-primary border border-primary text-sm font-medium transition-colors"
       >
-        <span className="text-sm">🤖</span>
         ChatGPT
       </button>
 
       <button
         onClick={openInClaude}
-        className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-container rounded-xl text-on-primary text-sm font-semibold transition-all duration-300"
+        className="inline-flex items-center px-4 py-2.5 bg-primary hover:bg-background text-on-primary hover:text-primary border border-primary text-sm font-medium transition-colors"
       >
-        <span className="text-sm">🧠</span>
         Claude
       </button>
 
       <button
         onClick={openInGemini}
-        className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-container rounded-xl text-on-primary text-sm font-semibold transition-all duration-300"
+        className="inline-flex items-center px-4 py-2.5 bg-primary hover:bg-background text-on-primary hover:text-primary border border-primary text-sm font-medium transition-colors"
       >
-        <span className="text-sm">✨</span>
         Gemini
       </button>
     </div>
