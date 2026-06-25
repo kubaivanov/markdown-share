@@ -3,15 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import FileList from '@/components/FileList';
-import { MarkdownFile, ThemeName } from '@/types';
-
-const themes: { value: ThemeName; label: string; bg: string }[] = [
-  { value: 'orange', label: 'Oranžová', bg: 'bg-[#f97316]' },
-  { value: 'blue', label: 'Modrá', bg: 'bg-[#3b82f6]' },
-  { value: 'green', label: 'Zelená', bg: 'bg-[#10b981]' },
-  { value: 'purple', label: 'Fialová', bg: 'bg-[#8b5cf6]' },
-  { value: 'gray', label: 'Šedá', bg: 'bg-[#6b7280]' },
-];
+import { MarkdownFile } from '@/types';
 
 export default function AdminPage() {
   const [adminKey, setAdminKey] = useState('');
@@ -19,7 +11,6 @@ export default function AdminPage() {
   const [files, setFiles] = useState<MarkdownFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [theme, setTheme] = useState<ThemeName>('orange');
 
   useEffect(() => {
     const savedKey = localStorage.getItem('md-share-admin-key');
@@ -59,11 +50,6 @@ export default function AdminPage() {
         setIsAuthenticated(true);
         localStorage.setItem('md-share-admin-key', key);
 
-        const settingsResponse = await fetch('/api/settings');
-        if (settingsResponse.ok) {
-          const settingsData = await settingsResponse.json() as { settings?: { theme?: ThemeName } };
-          setTheme(settingsData.settings?.theme || 'orange');
-        }
       } else {
         setError('Nastala chyba při načítání souborů');
       }
@@ -85,22 +71,6 @@ export default function AdminPage() {
     setIsAuthenticated(false);
     setAdminKey('');
     setFiles([]);
-  };
-
-  const handleThemeChange = async (newTheme: ThemeName) => {
-    setTheme(newTheme);
-    try {
-      await fetch('/api/settings', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Admin-Key': adminKey,
-        },
-        body: JSON.stringify({ theme: newTheme }),
-      });
-    } catch (err) {
-      console.error('Theme update error:', err);
-    }
   };
 
   if (!isAuthenticated) {
@@ -187,23 +157,6 @@ export default function AdminPage() {
           </Link>
 
           <div className="flex items-center gap-5">
-            <div className="hidden md:flex items-center gap-3">
-              <span className="text-xs font-medium text-on-surface-variant">Téma</span>
-              <div className="flex gap-1.5">
-                {themes.map((t) => (
-                  <button
-                    key={t.value}
-                    onClick={() => handleThemeChange(t.value)}
-                    className={`w-4 h-4 rounded-full border border-outline-variant ${t.bg} transition-all duration-200 ${
-                      theme === t.value
-                        ? 'ring-2 ring-offset-2 ring-on-surface scale-110'
-                        : 'hover:scale-125 opacity-50 hover:opacity-100'
-                    }`}
-                    title={t.label}
-                  />
-                ))}
-              </div>
-            </div>
             <button
               onClick={handleLogout}
               className="text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"

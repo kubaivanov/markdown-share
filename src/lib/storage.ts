@@ -212,7 +212,7 @@ export async function getSettings(): Promise<AppSettings> {
     .first<{ value: string }>();
 
   if (!row) {
-    return { theme: 'orange' };
+    return { theme: 'blue' };
   }
 
   return JSON.parse(row.value) as AppSettings;

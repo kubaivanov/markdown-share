@@ -23,6 +23,9 @@ export const metadata: Metadata = {
       noimageindex: true,
     },
   },
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

@@ -28,7 +28,7 @@
   --color-primary-fixed-dim: #2a2a2a;
 
   /* Secondary */
-  --color-secondary: #1d4ed8;
+  --color-secondary: #004FE0;
   --color-on-secondary: #fafafa;
   --color-secondary-container: #f1f1f1;
   --color-on-secondary-container: #0a0a0a;
@@ -36,14 +36,14 @@
   --color-secondary-fixed-dim: #d4d4d4;
 
   /* Tertiary */
-  --color-tertiary: #1d4ed8;
+  --color-tertiary: #004FE0;
   --color-on-tertiary: #fafafa;
   --color-tertiary-container: #eff6ff;
   --color-tertiary-fixed: #dbeafe;
   --color-tertiary-fixed-dim: #bfdbfe;
   --color-on-tertiary-fixed: #0a0a0a;
-  --color-on-tertiary-fixed-variant: #1d4ed8;
-  --color-on-tertiary-container: #1d4ed8;
+  --color-on-tertiary-fixed-variant: #004FE0;
+  --color-on-tertiary-container: #004FE0;
 
   /* Error */
   --color-error: #b91c1c;
@@ -140,7 +140,7 @@ body {
 .hljs-variable,
 .hljs-template-tag,
 .hljs-template-variable {
-  color: #1d4ed8;
+  color: #004FE0;
 }
 
 .hljs-comment,
@@ -154,7 +154,7 @@ body {
 .hljs-regexp,
 .hljs-literal,
 .hljs-link {
-  color: #1d4ed8;
+  color: #004FE0;
 }
 
 .hljs-built_in,
@@ -187,14 +187,14 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(29, 78, 216, 0.18);
+  background: rgba(0, 79, 224, 0.18);
   color: var(--color-on-surface);
 }
 
 /* Annotation highlights in markdown */
 .annotation-highlight {
-  background: rgba(29, 78, 216, 0.12);
-  border-bottom: 2px solid rgba(29, 78, 216, 0.35);
+  background: rgba(0, 79, 224, 0.12);
+  border-bottom: 2px solid rgba(0, 79, 224, 0.35);
   border-radius: 0;
   padding: 0 2px;
   cursor: pointer;
@@ -202,39 +202,15 @@ body {
 }
 
 .annotation-highlight:hover {
-  background: rgba(29, 78, 216, 0.2);
+  background: rgba(0, 79, 224, 0.2);
 }
 
-.annotation-highlight[data-theme="blue"] {
-  background: rgba(29, 78, 216, 0.12);
-  border-bottom-color: rgba(29, 78, 216, 0.35);
+.annotation-highlight[data-theme] {
+  background: rgba(0, 79, 224, 0.12);
+  border-bottom-color: rgba(0, 79, 224, 0.35);
 }
-.annotation-highlight[data-theme="blue"]:hover {
-  background: rgba(29, 78, 216, 0.2);
-}
-
-.annotation-highlight[data-theme="green"] {
-  background: rgba(29, 78, 216, 0.12);
-  border-bottom-color: rgba(29, 78, 216, 0.35);
-}
-.annotation-highlight[data-theme="green"]:hover {
-  background: rgba(29, 78, 216, 0.2);
-}
-
-.annotation-highlight[data-theme="purple"] {
-  background: rgba(29, 78, 216, 0.12);
-  border-bottom-color: rgba(29, 78, 216, 0.35);
-}
-.annotation-highlight[data-theme="purple"]:hover {
-  background: rgba(29, 78, 216, 0.2);
-}
-
-.annotation-highlight[data-theme="gray"] {
-  background: rgba(10, 10, 10, 0.08);
-  border-bottom-color: rgba(10, 10, 10, 0.25);
-}
-.annotation-highlight[data-theme="gray"]:hover {
-  background: rgba(10, 10, 10, 0.14);
+.annotation-highlight[data-theme]:hover {
+  background: rgba(0, 79, 224, 0.2);
 }
 
 /* GFM Task Lists */

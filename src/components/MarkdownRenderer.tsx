@@ -39,7 +39,7 @@ const themeClasses: Record<ThemeName, string> = {
   `,
 };
 
-export default function MarkdownRenderer({ content, theme = 'orange' }: MarkdownRendererProps) {
+export default function MarkdownRenderer({ content, theme = 'blue' }: MarkdownRendererProps) {
   return (
     <article className={`prose prose-gray max-w-none text-[1.05rem] md:text-[1.125rem] leading-[1.8]
       prose-headings:text-on-surface prose-headings:font-headline prose-headings:font-extrabold

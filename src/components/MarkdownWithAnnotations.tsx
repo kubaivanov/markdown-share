@@ -99,7 +99,7 @@ export default function MarkdownWithAnnotations({
   }, [onHighlightClick]);
 
   const processedContent = commentsEnabled
-    ? preprocessContent(content, comments, theme || 'orange')
+    ? preprocessContent(content, comments, theme || 'blue')
     : content;
 
   return (
