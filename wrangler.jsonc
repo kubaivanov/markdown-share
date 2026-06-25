@@ -15,6 +15,7 @@
     {
       "binding": "DB",
       "database_name": "markdown-share-db",
+      "database_id": "b7916e5c-4cac-4192-9538-61623a91828e",
       "migrations_dir": "./migrations"
     }
   ],
