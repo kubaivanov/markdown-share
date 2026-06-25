@@ -68,6 +68,20 @@ npm run preview
 npm run deploy
 ```
 
+## Cloudflare Workers Builds
+
+Pokud deploy běží přes Cloudflare Git/Workers Builds, nastav příkazy takhle:
+
+```bash
+# Build command
+npm run cf-build
+
+# Deploy command
+npx wrangler deploy
+```
+
+Nestačí `npm run build`, protože ten spouští jen `next build`. OpenNext deploy potřebuje předem vygenerovaný `.open-next` výstup z `opennextjs-cloudflare build`.
+
 ## Migrace dat z Vercelu
 
 Tenhle commit jen přepíná runtime a storage implementaci. Existující data z Vercel KV/Blob se automaticky nepřenášejí. Pro migraci je potřeba exportovat metadata z Vercel KV, stáhnout blob soubory a zapsat je do D1/R2.
