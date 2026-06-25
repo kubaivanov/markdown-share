@@ -56,7 +56,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const body = await request.json();
+    const body = await request.json() as { author?: unknown; text?: unknown; selection?: unknown };
     const { author, text, selection } = body;
 
     if (!text || typeof text !== 'string' || !text.trim()) {
@@ -66,7 +66,12 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const comment = await addComment(slug, author || '', text, selection);
+    const comment = await addComment(
+      slug,
+      typeof author === 'string' ? author : '',
+      text,
+      typeof selection === 'string' ? selection : undefined
+    );
     return NextResponse.json({ success: true, comment }, { status: 201 });
   } catch (error) {
     console.error('Add comment error:', error);
@@ -114,10 +119,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   const { slug } = await params;
 
   try {
-    const body = await request.json();
+    const body = await request.json() as { id?: unknown; action?: unknown; text?: unknown };
     const { id, action, text } = body;
 
-    if (!id) {
+    if (!id || typeof id !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Comment ID is required' },
         { status: 400 }

@@ -24,7 +24,7 @@ export default function FileList({ files: initialFiles, adminKey }: FileListProp
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json() as { commentsEnabled: boolean };
         setFiles(files.map(f =>
           f.slug === slug ? { ...f, commentsEnabled: data.commentsEnabled } : f
         ));

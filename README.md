@@ -20,6 +20,7 @@ Jednoduchá webová aplikácia na zdieľanie markdown súborov s integráciou pr
 1. [Požiadavky](#-požiadavky)
 2. [Lokálne spustenie](#-lokálne-spustenie)
 3. [Deploy na Vercel](#-deploy-na-vercel)
+3a. [Deploy na Cloudflare Worker](./docs/cloudflare-deploy.md)
 4. [GitHub integrácia a automatické deploy](#-github-integrácia-a-automatické-deploy)
 5. [Nastavenie share scriptu](#-nastavenie-share-scriptu)
 6. [Použitie](#-použitie)

@@ -29,17 +29,17 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const body = await request.json();
+    const body = await request.json() as { theme?: unknown };
     const { theme } = body;
 
-    if (theme && !validThemes.includes(theme)) {
+    if (theme && (typeof theme !== 'string' || !validThemes.includes(theme as ThemeName))) {
       return NextResponse.json(
         { success: false, error: 'Invalid theme' },
         { status: 400 }
       );
     }
 
-    const settings = await updateSettings({ theme });
+    const settings = await updateSettings({ theme: theme as ThemeName | undefined });
     return NextResponse.json({ success: true, settings });
   } catch (error) {
     console.error('Update settings error:', error);

@@ -17,14 +17,6 @@ function escapeRegex(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-const themeHighlightColors: Record<string, { bg: string; border: string; hover: string }> = {
-  orange: { bg: 'rgba(249, 115, 22, 0.15)', border: 'rgba(234, 88, 12, 0.35)', hover: 'rgba(249, 115, 22, 0.3)' },
-  blue: { bg: 'rgba(59, 130, 246, 0.15)', border: 'rgba(37, 99, 235, 0.35)', hover: 'rgba(59, 130, 246, 0.3)' },
-  green: { bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(5, 150, 105, 0.35)', hover: 'rgba(16, 185, 129, 0.3)' },
-  purple: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(124, 58, 237, 0.35)', hover: 'rgba(139, 92, 246, 0.3)' },
-  gray: { bg: 'rgba(107, 114, 128, 0.15)', border: 'rgba(75, 85, 99, 0.35)', hover: 'rgba(107, 114, 128, 0.3)' },
-};
-
 function preprocessContent(content: string, comments: Comment[], theme: string): string {
   let processed = content;
 
@@ -62,7 +54,7 @@ export default function MarkdownWithAnnotations({
     if (!commentsEnabled) return;
     let cancelled = false;
     fetch(`/api/comments/${slug}`)
-      .then(r => r.ok ? r.json() : null)
+      .then(r => r.ok ? r.json() as Promise<{ comments?: Comment[] }> : null)
       .then(data => {
         if (!cancelled && data) setComments(data.comments || []);
       })

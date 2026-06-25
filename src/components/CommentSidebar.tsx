@@ -36,7 +36,7 @@ export default function CommentSidebar({
     try {
       const response = await fetch(`/api/comments/${slug}`);
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json() as { comments?: Comment[] };
         setComments(data.comments || []);
       }
     } catch (error) {
@@ -75,7 +75,7 @@ export default function CommentSidebar({
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json() as { comment: Comment };
         setComments([...comments, data.comment]);
         setText('');
         onSelectionUsed?.();
@@ -124,7 +124,7 @@ export default function CommentSidebar({
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json() as { comment: Comment };
         setComments(comments.map(c => c.id === commentId ? data.comment : c));
         setEditingId(null);
         setEditText('');
@@ -143,7 +143,7 @@ export default function CommentSidebar({
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json() as { comment: Comment };
         setComments(comments.map(c => c.id === commentId ? data.comment : c));
       }
     } catch (error) {

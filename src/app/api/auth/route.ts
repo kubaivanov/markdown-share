@@ -3,10 +3,10 @@ import { validateAdminKey } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json() as { adminKey?: unknown };
     const { adminKey } = body;
 
-    if (!adminKey) {
+    if (!adminKey || typeof adminKey !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Admin klíč je povinný' },
         { status: 400 }
@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
 
 
 

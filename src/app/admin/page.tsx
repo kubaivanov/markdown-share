@@ -41,7 +41,7 @@ export default function AdminPage() {
       });
 
       if (!authResponse.ok) {
-        const authData = await authResponse.json();
+        const authData = await authResponse.json() as { error?: string };
         setError(authData.error || 'Nesprávný admin klíč');
         localStorage.removeItem('md-share-admin-key');
         setIsAuthenticated(false);
@@ -54,14 +54,14 @@ export default function AdminPage() {
       });
 
       if (filesResponse.ok) {
-        const data = await filesResponse.json();
+        const data = await filesResponse.json() as { files: MarkdownFile[] };
         setFiles(data.files);
         setIsAuthenticated(true);
         localStorage.setItem('md-share-admin-key', key);
 
         const settingsResponse = await fetch('/api/settings');
         if (settingsResponse.ok) {
-          const settingsData = await settingsResponse.json();
+          const settingsData = await settingsResponse.json() as { settings?: { theme?: ThemeName } };
           setTheme(settingsData.settings?.theme || 'orange');
         }
       } else {
