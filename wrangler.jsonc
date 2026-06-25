@@ -4,12 +4,21 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-06-25",
   "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "docs.jakubivanov.online",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "NEXT_PUBLIC_BASE_URL": "https://docs.jakubivanov.online"
   },
   "d1_databases": [
     {
