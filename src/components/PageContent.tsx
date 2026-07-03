@@ -66,10 +66,6 @@ export default function PageContent({
             <span>{format(new Date(createdAt), "d. MMMM yyyy", { locale: cs })}</span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-on-surface mb-8 break-words">
-            {filename}
-          </h1>
-
           <ShareButtons content={content} filename={filename} slug={slug} />
         </div>
 
