@@ -121,6 +121,14 @@ body {
   display: block;
 }
 
+.prose a {
+  transition: color 0.18s ease;
+}
+
+.prose a:hover {
+  color: var(--color-on-surface) !important;
+}
+
 /* Markdown feature blocks */
 .prose .markdown-table-scroll {
   position: relative;
@@ -176,8 +184,29 @@ body {
 }
 
 .prose blockquote {
+  position: relative;
+  margin: 2rem 0 !important;
+  padding: 1.1rem 1.25rem 1.1rem 1.5rem !important;
+  border: 1px solid rgba(0, 79, 224, 0.16) !important;
   border-left-color: var(--color-secondary) !important;
-  background: rgba(0, 79, 224, 0.05) !important;
+  border-left-width: 4px !important;
+  background: linear-gradient(90deg, rgba(0, 79, 224, 0.08), rgba(0, 79, 224, 0.025)) !important;
+  color: var(--color-on-surface) !important;
+}
+
+.prose blockquote p {
+  margin: 0 !important;
+  color: rgba(10, 10, 10, 0.78) !important;
+  line-height: 1.7 !important;
+}
+
+.prose blockquote p + p {
+  margin-top: 0.75rem !important;
+}
+
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: none !important;
 }
 
 .prose code:not(pre code) {

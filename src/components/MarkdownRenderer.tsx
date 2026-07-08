@@ -14,27 +14,27 @@ interface MarkdownRendererProps {
 
 const themeClasses: Record<ThemeName, string> = {
   orange: `
-    prose-a:text-secondary hover:prose-a:text-on-surface
+    prose-a:text-secondary
     prose-code:text-on-surface
     prose-blockquote:border-outline-variant prose-blockquote:bg-surface-container-low
   `,
   blue: `
-    prose-a:text-secondary hover:prose-a:text-on-surface
+    prose-a:text-secondary
     prose-code:text-on-surface
     prose-blockquote:border-outline-variant prose-blockquote:bg-surface-container-low
   `,
   green: `
-    prose-a:text-secondary hover:prose-a:text-on-surface
+    prose-a:text-secondary
     prose-code:text-on-surface
     prose-blockquote:border-outline-variant prose-blockquote:bg-surface-container-low
   `,
   purple: `
-    prose-a:text-secondary hover:prose-a:text-on-surface
+    prose-a:text-secondary
     prose-code:text-on-surface
     prose-blockquote:border-outline-variant prose-blockquote:bg-surface-container-low
   `,
   gray: `
-    prose-a:text-secondary hover:prose-a:text-on-surface
+    prose-a:text-secondary
     prose-code:text-secondary
     prose-blockquote:border-outline/30 prose-blockquote:bg-surface-container-low
   `,
