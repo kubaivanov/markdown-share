@@ -1,6 +1,6 @@
 'use client';
 
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
@@ -39,6 +39,18 @@ const themeClasses: Record<ThemeName, string> = {
   `,
 };
 
+const markdownComponents: Components = {
+  table({ children, node, ...props }) {
+    void node;
+
+    return (
+      <div className="markdown-table-scroll" role="region" aria-label="Scrollable table" tabIndex={0}>
+        <table {...props}>{children}</table>
+      </div>
+    );
+  },
+};
+
 export default function MarkdownRenderer({ content, theme = 'blue' }: MarkdownRendererProps) {
   return (
     <article className={`prose prose-gray max-w-none text-[1.05rem] md:text-[1.125rem] leading-[1.8]
@@ -54,7 +66,7 @@ export default function MarkdownRenderer({ content, theme = 'blue' }: MarkdownRe
       prose-blockquote:border-l prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:text-on-surface/70 prose-blockquote:not-italic prose-blockquote:font-body
       prose-ul:text-on-surface/80 prose-ol:text-on-surface/80
       prose-li:marker:text-outline prose-li:my-2
-      prose-table:border-collapse prose-table:w-full
+      prose-table:border-collapse
       prose-th:bg-surface-container-low prose-th:px-5 prose-th:py-3 prose-th:text-left prose-th:font-bold prose-th:text-on-surface prose-th:font-headline prose-th:text-sm prose-th:border prose-th:border-outline-variant
       prose-td:px-5 prose-td:py-3 prose-td:border prose-td:border-outline-variant
       prose-hr:border-outline-variant prose-hr:my-12
@@ -63,6 +75,7 @@ export default function MarkdownRenderer({ content, theme = 'blue' }: MarkdownRe
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
+        components={markdownComponents}
       >
         {content}
       </ReactMarkdown>

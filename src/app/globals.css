@@ -121,6 +121,55 @@ body {
   display: block;
 }
 
+/* Markdown feature blocks */
+.prose .markdown-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  margin: 2rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid rgba(0, 79, 224, 0.18);
+  border-top: 3px solid var(--color-secondary);
+  background: var(--color-surface-bright);
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose .markdown-table-scroll:focus-visible {
+  outline: 2px solid rgba(0, 79, 224, 0.45);
+  outline-offset: 3px;
+}
+
+.prose .markdown-table-scroll table {
+  width: max-content;
+  min-width: 42rem;
+  max-width: none;
+  margin: 0;
+}
+
+.prose .markdown-table-scroll th {
+  border-color: rgba(0, 79, 224, 0.18);
+  background: rgba(0, 79, 224, 0.08);
+  color: var(--color-secondary);
+}
+
+.prose .markdown-table-scroll td {
+  border-color: rgba(0, 79, 224, 0.14);
+}
+
+.prose .markdown-table-scroll tr:nth-child(even) td {
+  background: rgba(0, 79, 224, 0.03);
+}
+
+.prose blockquote {
+  border-left-color: var(--color-secondary) !important;
+  background: rgba(0, 79, 224, 0.05) !important;
+}
+
+.prose code:not(pre code) {
+  border-color: rgba(0, 79, 224, 0.24) !important;
+  color: var(--color-secondary) !important;
+}
+
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-literal,
