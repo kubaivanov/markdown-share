@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState, type ComponentPropsWithoutRef } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -39,16 +40,50 @@ const themeClasses: Record<ThemeName, string> = {
   `,
 };
 
-const markdownComponents: Components = {
-  table({ children, node, ...props }) {
-    void node;
+type MarkdownTableProps = ComponentPropsWithoutRef<'table'> & {
+  node?: unknown;
+};
 
-    return (
-      <div className="markdown-table-scroll" role="region" aria-label="Scrollable table" tabIndex={0}>
-        <table {...props}>{children}</table>
-      </div>
-    );
-  },
+function MarkdownTable({ children, node, ...props }: MarkdownTableProps) {
+  void node;
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [isScrollable, setIsScrollable] = useState(false);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const updateScrollable = () => {
+      setIsScrollable(wrapper.scrollWidth > wrapper.clientWidth + 1);
+    };
+
+    updateScrollable();
+
+    const resizeObserver = new ResizeObserver(updateScrollable);
+    resizeObserver.observe(wrapper);
+
+    const table = wrapper.querySelector('table');
+    if (table) resizeObserver.observe(table);
+
+    return () => resizeObserver.disconnect();
+  }, [children]);
+
+  return (
+    <div
+      ref={wrapperRef}
+      className={`markdown-table-scroll${isScrollable ? ' is-scrollable' : ''}`}
+      role={isScrollable ? 'region' : undefined}
+      aria-label={isScrollable ? 'Scrollable table' : undefined}
+      tabIndex={isScrollable ? 0 : undefined}
+    >
+      <table {...props}>{children}</table>
+    </div>
+  );
+}
+
+const markdownComponents: Components = {
+  table: MarkdownTable,
 };
 
 export default function MarkdownRenderer({ content, theme = 'blue' }: MarkdownRendererProps) {
