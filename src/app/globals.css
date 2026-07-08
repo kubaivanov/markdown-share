@@ -135,8 +135,18 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.prose .markdown-table-scroll.is-scrollable {
+.prose .markdown-table-scroll.can-scroll-right {
   box-shadow: inset -20px 0 18px -18px rgba(0, 79, 224, 0.45);
+}
+
+.prose .markdown-table-scroll.can-scroll-left {
+  box-shadow: inset 20px 0 18px -18px rgba(0, 79, 224, 0.45);
+}
+
+.prose .markdown-table-scroll.can-scroll-left.can-scroll-right {
+  box-shadow:
+    inset 20px 0 18px -18px rgba(0, 79, 224, 0.45),
+    inset -20px 0 18px -18px rgba(0, 79, 224, 0.45);
 }
 
 .prose .markdown-table-scroll:focus-visible {
@@ -145,7 +155,7 @@ body {
 }
 
 .prose .markdown-table-scroll table {
-  width: max-content;
+  width: 100%;
   min-width: 100%;
   max-width: none;
   margin: 0;
@@ -155,7 +165,6 @@ body {
   border-color: rgba(0, 79, 224, 0.18);
   background: rgba(0, 79, 224, 0.08);
   color: var(--color-secondary);
-  white-space: nowrap;
 }
 
 .prose .markdown-table-scroll td {

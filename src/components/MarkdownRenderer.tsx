@@ -48,34 +48,50 @@ function MarkdownTable({ children, node, ...props }: MarkdownTableProps) {
   void node;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isScrollable, setIsScrollable] = useState(false);
+  const [scrollState, setScrollState] = useState({ left: false, right: false });
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const updateScrollable = () => {
-      setIsScrollable(wrapper.scrollWidth > wrapper.clientWidth + 1);
+    const updateScrollState = () => {
+      const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
+
+      setScrollState({
+        left: wrapper.scrollLeft > 1,
+        right: wrapper.scrollLeft < maxScrollLeft - 1,
+      });
     };
 
-    updateScrollable();
+    updateScrollState();
 
-    const resizeObserver = new ResizeObserver(updateScrollable);
+    const resizeObserver = new ResizeObserver(updateScrollState);
     resizeObserver.observe(wrapper);
+    wrapper.addEventListener('scroll', updateScrollState, { passive: true });
 
     const table = wrapper.querySelector('table');
     if (table) resizeObserver.observe(table);
 
-    return () => resizeObserver.disconnect();
+    return () => {
+      resizeObserver.disconnect();
+      wrapper.removeEventListener('scroll', updateScrollState);
+    };
   }, [children]);
+
+  const canScroll = scrollState.left || scrollState.right;
+  const scrollClasses = [
+    'markdown-table-scroll',
+    scrollState.left ? 'can-scroll-left' : '',
+    scrollState.right ? 'can-scroll-right' : '',
+  ].filter(Boolean).join(' ');
 
   return (
     <div
       ref={wrapperRef}
-      className={`markdown-table-scroll${isScrollable ? ' is-scrollable' : ''}`}
-      role={isScrollable ? 'region' : undefined}
-      aria-label={isScrollable ? 'Scrollable table' : undefined}
-      tabIndex={isScrollable ? 0 : undefined}
+      className={scrollClasses}
+      role={canScroll ? 'region' : undefined}
+      aria-label={canScroll ? 'Scrollable table' : undefined}
+      tabIndex={canScroll ? 0 : undefined}
     >
       <table {...props}>{children}</table>
     </div>
