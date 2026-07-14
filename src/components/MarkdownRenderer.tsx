@@ -1,6 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState, type ComponentPropsWithoutRef } from 'react';
+import {
+  Children,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentPropsWithoutRef,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -43,6 +52,69 @@ const themeClasses: Record<ThemeName, string> = {
 type MarkdownTableProps = ComponentPropsWithoutRef<'table'> & {
   node?: unknown;
 };
+
+type MarkdownCodeBlockProps = ComponentPropsWithoutRef<'pre'> & {
+  node?: unknown;
+};
+
+function getTextContent(children: ReactNode): string {
+  if (typeof children === 'string' || typeof children === 'number') return String(children);
+  if (Array.isArray(children)) return children.map(getTextContent).join('');
+  if (isValidElement<{ children?: ReactNode }>(children)) return getTextContent(children.props.children);
+
+  return '';
+}
+
+function getLanguageLabel(className?: string) {
+  const language = className?.match(/language-([\w-]+)/)?.[1]?.toLowerCase();
+
+  if (language === 'javascript' || language === 'js') return 'JavaScript';
+  if (language === 'typescript' || language === 'ts') return 'TypeScript';
+  if (language === 'json') return 'JSON';
+  if (language === 'html') return 'HTML';
+  if (language === 'css') return 'CSS';
+  if (language === 'bash' || language === 'shell' || language === 'sh') return 'Shell';
+
+  return language ?? 'Kód';
+}
+
+function MarkdownCodeBlock({ children, node, ...props }: MarkdownCodeBlockProps) {
+  void node;
+
+  const [copied, setCopied] = useState(false);
+  const codeElement = Children.toArray(children).find(isValidElement) as
+    | ReactElement<{ className?: string; children?: ReactNode }>
+    | undefined;
+  const code = getTextContent(codeElement?.props.children ?? children);
+  const language = getLanguageLabel(codeElement?.props.className);
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard access can be unavailable on non-secure origins.
+    }
+  }
+
+  return (
+    <pre {...props} className="markdown-code-block">
+      <div className="markdown-code-block__header">
+        <span className="markdown-code-block__language">{language}</span>
+        <button
+          type="button"
+          className="markdown-code-block__copy"
+          onClick={copyCode}
+          aria-label={copied ? 'Kód zkopírován' : 'Kopírovat kód'}
+        >
+          {copied ? 'Zkopírováno' : 'Kopírovat'}
+        </button>
+      </div>
+      {children}
+    </pre>
+  );
+}
 
 function MarkdownTable({ children, node, ...props }: MarkdownTableProps) {
   void node;
@@ -99,6 +171,7 @@ function MarkdownTable({ children, node, ...props }: MarkdownTableProps) {
 }
 
 const markdownComponents: Components = {
+  pre: MarkdownCodeBlock,
   table: MarkdownTable,
 };
 
@@ -113,7 +186,6 @@ export default function MarkdownRenderer({ content, theme = 'blue' }: MarkdownRe
       prose-a:underline prose-a:underline-offset-4 prose-a:font-medium
       prose-strong:text-on-surface prose-strong:font-semibold
       prose-code:bg-transparent prose-code:border prose-code:border-outline-variant prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[0.9em] prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
-      prose-pre:bg-surface-container-low prose-pre:overflow-x-auto prose-pre:border prose-pre:border-outline-variant
       prose-blockquote:border-l prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:text-on-surface/70 prose-blockquote:not-italic prose-blockquote:font-body
       prose-ul:text-on-surface/80 prose-ol:text-on-surface/80
       prose-li:marker:text-outline prose-li:my-2
