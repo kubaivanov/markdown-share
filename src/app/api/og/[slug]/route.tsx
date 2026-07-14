@@ -12,13 +12,17 @@ const size = {
 };
 
 async function getSpaceGroteskFont() {
-  const response = await fetch(
-    'https://raw.githubusercontent.com/floriankarsten/space-grotesk/master/fonts/ttf/SpaceGrotesk%5Bwght%5D.ttf'
-  );
+  try {
+    const response = await fetch(
+      'https://raw.githubusercontent.com/floriankarsten/space-grotesk/master/fonts/ttf/static/SpaceGrotesk-Bold.ttf'
+    );
 
-  if (!response.ok) throw new Error('Unable to load the Space Grotesk font.');
+    if (!response.ok) return null;
 
-  return response.arrayBuffer();
+    return response.arrayBuffer();
+  } catch {
+    return null;
+  }
 }
 
 function wrapText(text: string, maxChars: number, maxLines: number): string[] {
@@ -74,7 +78,7 @@ export async function GET(_request: Request, { params }: RouteProps) {
           background: '#004FE0',
           color: '#fafafa',
           padding: '52px 68px 60px',
-          fontFamily: 'Space Grotesk',
+          fontFamily: fontData ? 'Space Grotesk' : 'Arial, sans-serif',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -103,7 +107,7 @@ export async function GET(_request: Request, { params }: RouteProps) {
         >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {titleLines.map((line, index) => (
-              <div key={`${line}-${index}`} style={{ fontSize: 76, lineHeight: 0.98, fontWeight: 800, letterSpacing: '-0.055em' }}>
+              <div key={`${line}-${index}`} style={{ fontSize: 76, lineHeight: 0.98, fontWeight: 700, letterSpacing: '-0.055em' }}>
                 {line}
               </div>
             ))}
@@ -113,14 +117,16 @@ export async function GET(_request: Request, { params }: RouteProps) {
     ),
     {
       ...size,
-      fonts: [
-        {
-          name: 'Space Grotesk',
-          data: fontData,
-          weight: 700,
-          style: 'normal',
-        },
-      ],
+      fonts: fontData
+        ? [
+            {
+              name: 'Space Grotesk',
+              data: fontData,
+              weight: 700,
+              style: 'normal',
+            } as const,
+          ]
+        : undefined,
     }
   );
 }
