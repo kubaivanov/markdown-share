@@ -11,13 +11,15 @@ const size = {
   height: 630,
 };
 
-const spaceGrotesk = fetch(
-  'https://raw.githubusercontent.com/floriankarsten/space-grotesk/master/fonts/ttf/SpaceGrotesk%5Bwght%5D.ttf'
-).then((response) => {
+async function getSpaceGroteskFont() {
+  const response = await fetch(
+    'https://raw.githubusercontent.com/floriankarsten/space-grotesk/master/fonts/ttf/SpaceGrotesk%5Bwght%5D.ttf'
+  );
+
   if (!response.ok) throw new Error('Unable to load the Space Grotesk font.');
 
   return response.arrayBuffer();
-});
+}
 
 function wrapText(text: string, maxChars: number, maxLines: number): string[] {
   const words = text.split(/\s+/).filter(Boolean);
@@ -54,10 +56,12 @@ export async function GET(_request: Request, { params }: RouteProps) {
     return new Response('Not found', { status: 404 });
   }
 
-  const content = await getFileContent(file.blobUrl);
+  const [content, fontData] = await Promise.all([
+    getFileContent(file.blobUrl),
+    getSpaceGroteskFont(),
+  ]);
   const title = getMarkdownTitle(content, file.filename);
   const titleLines = wrapText(title, 27, 4);
-  const fontData = await spaceGrotesk;
 
   return new ImageResponse(
     (

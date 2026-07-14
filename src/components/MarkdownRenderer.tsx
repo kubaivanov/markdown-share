@@ -179,7 +179,7 @@ export default function MarkdownRenderer({ content, theme = 'blue' }: MarkdownRe
   return (
     <article className={`prose prose-gray max-w-none text-[1.05rem] md:text-[1.125rem] leading-[1.8]
       prose-headings:text-on-surface prose-headings:font-headline prose-headings:font-extrabold
-      prose-h1:text-4xl prose-h1:mb-8 prose-h1:pb-5 prose-h1:border-b prose-h1:border-outline-variant prose-h1:tracking-tight
+      prose-h1:text-4xl prose-h1:mb-8 prose-h1:tracking-tight
       prose-h2:text-3xl prose-h2:mt-16 prose-h2:mb-5 prose-h2:pt-6 prose-h2:border-t prose-h2:border-outline-variant prose-h2:tracking-tight
       prose-h3:text-2xl prose-h3:mt-11 prose-h3:mb-3 prose-h3:tracking-tight
       prose-p:text-on-surface/85 prose-p:leading-[1.85] prose-p:my-5 prose-p:font-body
