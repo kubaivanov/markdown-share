@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { getFileBySlug, getFileContent } from '@/lib/storage';
-import { getMarkdownExcerpt, getMarkdownTitle } from '@/lib/markdown-metadata';
+import { getMarkdownTitle } from '@/lib/markdown-metadata';
 
 interface RouteProps {
   params: Promise<{ slug: string }>;
@@ -10,6 +10,14 @@ const size = {
   width: 1200,
   height: 630,
 };
+
+const spaceGrotesk = fetch(
+  'https://raw.githubusercontent.com/floriankarsten/space-grotesk/master/fonts/ttf/SpaceGrotesk%5Bwght%5D.ttf'
+).then((response) => {
+  if (!response.ok) throw new Error('Unable to load the Space Grotesk font.');
+
+  return response.arrayBuffer();
+});
 
 function wrapText(text: string, maxChars: number, maxLines: number): string[] {
   const words = text.split(/\s+/).filter(Boolean);
@@ -48,9 +56,8 @@ export async function GET(_request: Request, { params }: RouteProps) {
 
   const content = await getFileContent(file.blobUrl);
   const title = getMarkdownTitle(content, file.filename);
-  const excerpt = getMarkdownExcerpt(content, title, 260);
-  const titleLines = wrapText(title, 25, 3);
-  const excerptLines = wrapText(excerpt, 58, 3);
+  const titleLines = wrapText(title, 27, 4);
+  const fontData = await spaceGrotesk;
 
   return new ImageResponse(
     (
@@ -60,66 +67,56 @@ export async function GET(_request: Request, { params }: RouteProps) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          background: '#fafafa',
-          color: '#0a0a0a',
-          padding: '58px 68px 52px',
-          fontFamily: 'Arial, sans-serif',
+          background: '#004FE0',
+          color: '#fafafa',
+          padding: '52px 68px 60px',
+          fontFamily: 'Space Grotesk',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', fontSize: 28, fontWeight: 800, letterSpacing: '-0.04em' }}>
-            jakubivanov<span style={{ color: '#888888' }}>.</span>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <div
             style={{
               display: 'flex',
-              border: '1px solid #d7d7d7',
-              padding: '10px 16px',
-              fontSize: 18,
-              color: '#666666',
+              border: '1px solid #8ab1ff',
+              padding: '9px 14px',
+              fontSize: 17,
+              color: '#fafafa',
               textTransform: 'uppercase',
-              letterSpacing: '0.12em',
+              letterSpacing: '0.1em',
             }}
           >
-            MD Share
+            shared doc
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
+        <div
+          style={{
+            display: 'flex',
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {titleLines.map((line, index) => (
-              <div key={`${line}-${index}`} style={{ fontSize: 72, lineHeight: 0.95, fontWeight: 900, letterSpacing: '-0.07em' }}>
+              <div key={`${line}-${index}`} style={{ fontSize: 76, lineHeight: 0.98, fontWeight: 800, letterSpacing: '-0.055em' }}>
                 {line}
               </div>
             ))}
           </div>
-
-          {excerptLines.length > 0 && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                maxWidth: 880,
-                color: '#4a4a4a',
-                fontSize: 30,
-                lineHeight: 1.22,
-                letterSpacing: '-0.03em',
-              }}
-            >
-              {excerptLines.map((line, index) => (
-                <div key={`${line}-${index}`}>{line}</div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18, color: '#777777', fontSize: 22 }}>
-          <div style={{ width: 80, height: 6, background: '#004FE0' }} />
-          <div style={{ display: 'flex' }}>shared markdown document</div>
         </div>
       </div>
     ),
-    size
+    {
+      ...size,
+      fonts: [
+        {
+          name: 'Space Grotesk',
+          data: fontData,
+          weight: 700,
+          style: 'normal',
+        },
+      ],
+    }
   );
 }
